@@ -1,0 +1,9 @@
+path_to_protein_folder
+name_of_protein
+path_to_grid_file (in case no grid file, either leave this line empty or write some gibberish)
+path_morgan_directory
+path_to_smile_directory
+path_to_sdf_directory
+Docking_program_name
+number_of_hyperparameters
+number_of_molecules_to_sample

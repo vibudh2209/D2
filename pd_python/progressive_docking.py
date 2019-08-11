@@ -38,6 +38,7 @@ parser.add_argument('-bs','--bs',required=True)
 parser.add_argument('-os','--os',required=True)
 parser.add_argument('-protein','--protein',required=True)
 parser.add_argument('-file_path','--file_path',required=True)
+parser.add_argument('-run_time','--run_time',required=True)
 
 io_args = parser.parse_args()
 
@@ -54,7 +55,8 @@ oss=int(io_args.os)
 t_mol=float(io_args.t_mol)
 protein = io_args.protein
 file_path = io_args.file_path
-print(nu,df,lr,ba,wt,cf,bs,oss,protein,file_path)
+run_time = int(io_args.os)
+print(nu,df,lr,ba,wt,cf,bs,oss,protein,file_path,run_time)
 
 def get_x_data(Oversampled_zid,fname):
     #train_set = np.zeros([1000000,1024])
@@ -405,7 +407,7 @@ adam_opt = tf.train.AdamOptimizer(learning_rate=lr,epsilon=1e-06)
 progressive_docking.compile(optimizer=adam_opt,loss='binary_crossentropy',metrics=['accuracy'])
 
 es = EarlyStopping(monitor='val_loss',min_delta=0,patience=10,verbose=0,mode='auto')
-es1 = TimedStopping(seconds=10800)
+es1 = TimedStopping(seconds=run_time)
 cw = {0:wt,1:1}
 
 progressive_docking.fit(Oversampled_X_train,Oversampled_y_train,epochs=500,batch_size=bs,shuffle=True,class_weight=cw,verbose=1,validation_data=[X_valid,y_valid],callbacks=[es,es1])

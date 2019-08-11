@@ -20,5 +20,31 @@ Before you start there are certain files that are required:
    - It will take ~260GB memory for 1.3 billion molecules.
 
 There are 5 phases to the method:
+(For more details please check the example folder)
 
-1) Random sampling a fixed number of molecules (e.g. 3M) from 
+1) Create a folder with the name of the protein and inside it create a text file with name "logs.txt"
+
+    - logs file should look something like [this](temp/logs.txt), one example can be found [here](temp/logs_example.txt)
+
+2) Next step is to start the phase 1 i.e. Random sampling a fixed number of molecules (e.g. 3M) from entire dataset, getting the morgan fingerprint and getting the smiles.
+
+   - Here based on the computational power available change the logs file fore number of molecules to be sampled (these same number of molecules will be docked later on). For iteration 1 try to keep the number as high as possible (you can decrease it for later iterations).
+   - Run 'bash pd_python/phase_1.sh iteration_no n_cpus path_to_log_file
+      
+       - This will run all the steps mentioned phase 1.
+
+3) Next is phase 2 which involve converting the smiles to sdf (2D to 3D optimization).
+   - There are three files in the smile folder created (train, valid and test). All three needs to be converted to sdf.
+   - In case you have openeye do the following:
+       - First protonate the molecules using "fixpka -in in_file -out output_file" (will take 5 mins for 1 million molecules)
+       - Then convert the file obtained to sdf by "oeomega classic -in file_after_protonation -out name_of_sdf_file.sdf -maxconfs 1 -strictstereo false -mpi_np number_of_cpus -log log_file_name.log -prefix prefix_name" (this will take >4-5 hours using 20 CPUs for one million molecules)
+
+4) Now you have all the required sdf. Dock them with any program of your choice.
+   - After this you will have 3 docked files one for each training, validation and testing.
+   - From these files get the csv file with column names: ZINC_ID, r_i_docking_score
+       - ZINC_ID column will have ids of the molecule
+       - r_i_docking_score will have docking score values of these molecules
+   - name the csv files: training_labels.txt, validation_labels.txt, testing_labels.txt
+   - place these three files in the respective iteration folder
+
+5) 
