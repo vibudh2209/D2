@@ -5,5 +5,4 @@ path_morgan_directory
 path_to_smile_directory
 path_to_sdf_directory
 Docking_program_name
-number_of_hyperparameters
 number_of_molecules_to_sample

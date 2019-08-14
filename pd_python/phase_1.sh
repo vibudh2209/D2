@@ -2,7 +2,7 @@
 
 file_path=`sed -n '1p' $3`
 protein=`sed -n '2p' $3`
-n_mol=`sed -n '9p' $3`
+n_mol=`sed -n '8p' $3`
 
 pr_it=$(($1-1)) 
 
@@ -18,7 +18,7 @@ sdf_directory=`sed -n '6p' $3`
 
 if [ $1 == 1 ];then pred_directory=$morgan_directory;else pred_directory=$file_path/$protein/iteration_$pr_it/morgan_1024_predictions;fi
 
-source tensorflow_gpu/bin/activate
+source $4/bin/activate
 python molecular_file_count_updated.py -pt $protein -it $1 -cdd $pred_directory -t_pos $t_cpu -t_samp $n_mol
 python sampling.py -pt $protein -fp $file_path -it $1 -dd $pred_directory -t_pos $t_cpu
 python sanity_check.py -pt $protein -fp $file_path -it $1

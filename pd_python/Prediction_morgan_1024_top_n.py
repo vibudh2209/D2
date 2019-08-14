@@ -10,7 +10,7 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-fn','--fn',required=True)
+#parser.add_argument('-fn','--fn',required=True)
 parser.add_argument('-protein','--protein',required=True)
 parser.add_argument('-it','--it',required=True)
 parser.add_argument('-file_path','--file_path',required=True)
@@ -18,7 +18,7 @@ parser.add_argument('-top_n','--top_n',required=True)
 #parser.add_argument('-mdd','--morgan_directory',required=True)
 
 io_args = parser.parse_args()
-fn = io_args.fn
+#fn = io_args.fn
 protein = str(io_args.protein)
 it = int(io_args.it)
 file_path = io_args.file_path
@@ -36,9 +36,12 @@ for f in glob.glob(file_path+'/'+protein+'/iteration_'+str(it)+'/morgan_1024_pre
     all_files.append(f)
 all_files.remove(file_path+'/'+protein+'/iteration_'+str(it)+'/morgan_1024_predictions/passed_file_ct.txt')
 
+print(len(all_files))
+
 ind_df = []
 for f in all_files:
-    ind_df = pd.read_csv(f,header=None)
+    ind_df.append(pd.read_csv(f,header=None))
+    print(f)
 all_molecules = pd.concat([*ind_df])
 ind_df = []
 all_molecules.columns= ['ZINC_ID','probability']
@@ -71,7 +74,7 @@ for f in files_to_make:
 
 with open(file_path+'/'+protein+'/iteration_'+str(it)+'/morgan_1024_predictions_new/passed_file_ct.txt','w') as ref:
     ct=0
-    for f in files_to_make:
+    for f in all_files:
         ct+=1
         name = f.split('/')[-1]
         if ct==t_f:

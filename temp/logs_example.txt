@@ -5,5 +5,4 @@
 /groups/cherkasvgrp/share/progressive_docking/ZINC_15_3D_smiles
 /groups/cherkasvgrp/share/progressive_docking/ZINC_15_3D
 OEDDOCKING
-24
 3000000
