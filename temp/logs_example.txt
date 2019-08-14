@@ -1,5 +1,5 @@
 /home/vagrawal/progressive_docking
-5YCP5YCP
+5YCP5
 /home/vagrawal/progressive_docking/Grid_Files/5YCP/5YCP.oeb
 /groups/cherkasvgrp/share/progressive_docking/ZINC_15_morgan_1024_3D
 /groups/cherkasvgrp/share/progressive_docking/ZINC_15_3D_smiles
