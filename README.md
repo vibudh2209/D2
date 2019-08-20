@@ -44,13 +44,13 @@ Run PD2.0
 Before starting PD2.0, create a folder with the name of the target. Create a text file named "logs.txt" inside it, following this [format](temp/logs.txt). PD2.0 is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted good molecules is reached (for more details please check the example folder):
 
 **Phase 1.** Random sampling of a fixed number of molecules (e.g. 3 millions) from the entire dataset, getting the Morgan fingerprint and the SMILES
-- The number of molecules to be sampled is defined in the logs.txt file. As these molecules will be docked later, set the number of molecules based on the computational power available to you. For iteration 1 try to keep the number as high as possible (you can decrease it for later iterations)
-- Run phase 1:
+1. The number of molecules to be sampled is defined in the logs.txt file. As these molecules will be docked later, set the number of molecules based on the computational power available to you. For iteration 1 try to keep the number as high as possible (you can decrease it for later iterations)
+2. Run phase 1:
     
           bash pd_python/phase_1.sh iteration_no n_cpus path_to_log_file path_to_tensorflow_venv
 
 **Phase 2.** 2D to 3D conversion from SMILES to sdf
-- The three files created in the SMILES folder in phase 1 (train, valid and test) need to be converted to 3D sdf format for docking. This includes assigning protonation states and generate 3D conformations, and can be done with different free (e.g. [openbabel](https://openbabel.org/docs/dev/Command-line_tools/babel.html)) or licensed programs (e.g. [omega](https://www.eyesopen.com/omega)). For example, with OpenEye omega program protonate the molecules using 
+The three files created in the SMILES folder in phase 1 (train, valid and test) need to be converted to 3D sdf format for docking. This includes assigning protonation states and generate 3D conformations, and can be done with different free (e.g. [openbabel](https://openbabel.org/docs/dev/Command-line_tools/babel.html)) or licensed programs (e.g. [omega](https://www.eyesopen.com/omega)). For example, with OpenEye omega program protonate the molecules using 
         
           fixpka -in in_file.smi -out output_file.smi
 
@@ -61,44 +61,47 @@ and convert the smi file obtained to sdf by running
 This will take >4-5 hours using 20 CPUs for one million molecules. Note that you may want to create more than 1 conformation per molecule depending on the docking software
 
 **Phase 3.** Molecular docking 
-- Run docking for the three compound sets (training, validation and testing)
-- From the docking results create three csv files with two columns, *ZINC_ID*, *r_i_docking_score* (use these exact headings):
+1. Run docking for the three compound sets (training, validation and testing)
+2. From the docking results create three csv files with two columns, *ZINC_ID*, *r_i_docking_score* (use these exact headings):
     - ZINC_ID column will have IDs of the molecules (use the same heading even if you are not screening ZINC)
     - r_i_docking_score will have the docking score values 
-- Name the csv files as training_labels.txt, validation_labels.txt, testing_labels.txt
-- Place the three files in the respective iteration folder
+3. Name the csv files as training_labels.txt, validation_labels.txt, testing_labels.txt
+4. Put the three files in the respective iteration folder
 
 **Phase 4.** Training of neural networks models and choice of best model to predict all molecules
-- First, generate bash files with different hyperparameters
+1. First, generate bash files with different hyperparameters
     - Activate the tensorflow environment and run
      
           python simple_job_models_noslurm.py -n_it iteration_no -mdd morgan_directory_path -time training_time(1-2hrs) -protein protein_name -file_path path_to_protein_folder -pdfp pd_python_folder_path -tfp tensorflow_venv_path
-      
+
     - Execute the 12 bash scripts created in protein_folder_path/protein/iteration_no/simple_job
     
-**Phase5** Next step is chose the best hyperparameter and use it to predict the entire database
-- For selecting the best hyperparameter run 
+**Phase 5.** Next step is chose the best hyperparameter and use it to predict the entire database
+1. For selecting the best hyperparameter run 
                  
           python hyperparameter_result_evaluation.py -n_it iteration_no -protein protein_name -file_path path_to_protein -mdd morgan_directory_path
                 
-- Generate bash files for individual Morgan files (for prediction):
+2. Generate bash files for individual Morgan files (for prediction):
 
           python simple_job_predictions.py -protein protein_name -file_path path_to_protein -n_it iteration_no -mdd morgan_directory
                 
-- Execute all the bash scripts in protein_folder_path/protein/iteration_no/simple_job_predictions
-- To check the number of molecules left after each iteration just load the protein_folder_path/protein/iteration_no/morgan_1024_predictions/passed_file_ct.txt and sum the last column. You can compare this number with predicted molecule left: 'protein_folder_path/protein/iteration_no/best_model_stats.txt' and verify whether they are close.
+3. Execute all the bash scripts in protein_folder_path/protein/iteration_no/simple_job_predictions
+4. To check the number of molecules left after each iteration just load the protein_folder_path/protein/iteration_no/morgan_1024_predictions/passed_file_ct.txt and sum the last column. You can compare this number with predicted molecule left: 'protein_folder_path/protein/iteration_no/best_model_stats.txt' and verify whether they are close.
 
-Repeat the above phases 1-5 for as many iterations as it takes to get a fixed number of final molecules that can be docked (e.g. until final number is <=15 million). You will just need to change the iteration_no value. After the final iteration is done and you have selected top n molecules, to get the SMILES for all the left compounds in the database do the following:
-- Out of the left we will segregate the ones which are already docked and the ones which needs to be docked
+Final iteration
+---------------
+
+Repeat the above phases 1-5 for as many iterations as it takes to get a fixed number of final molecules that can be docked (e.g. until final number is <=15 million). You will just need to change the iteration_no value. After the final iteration is done you will dock the molecules predicted by PD2.0. Some of these molecules could have been randomly sampled during the previous iterations and do not need to be docked again:
 - Run 
 
           bash final_phase_noslurm.sh iteration_no number_of_cpus path_to_log_file path_to_tensorflow_venv
 
-- This will create new folder after_iteration and put all the already docked files inside docked folder and all the SMILES in to_dock folder
+- This will create a new folder called after_iteration and put all the already docked molecules inside the docked folder and all the remaining SMILES in to_dock folder
 - You can dock the SMILES using the same procedure as step 3
 
-USEFUL TIPS
+Useful tips
 -----------
+
 1. In case you are in hurry and want to select top n molecules after an iteration (for example you are done with 3 iterations and 30 million molecules are left but you do not want to run another iteration, selecting the top 10 million compounds) run:
 python Prediction_morgan_1024_top_n.py -protein protein_name -it iteration_no -file_path path_to_protein -top_n top_n_molecules
 
