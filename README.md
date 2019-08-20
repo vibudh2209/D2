@@ -43,13 +43,13 @@ Run PD2.0
 
 Before starting PD2.0, create a folder with the name of the target. Create a text file named "logs.txt" inside it, following this [format](temp/logs.txt). PD2.0 is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted good molecules is reached (for more details please check the example folder):
 
-**Phase 1.** Random sampling of a fixed number of molecules (e.g. 3 millions) from the entire dataset, getting the Morgan fingerprint and the SMILES
+**Phase 1. Random sampling of a fixed number of molecules (e.g. 3 millions) from the entire dataset, getting the Morgan fingerprint and the SMILES**
 1. The number of molecules to be sampled is defined in the logs.txt file. As these molecules will be docked later, set the number of molecules based on the computational power available to you. For iteration 1 try to keep the number as high as possible (you can decrease it for later iterations)
 2. Run phase 1:
     
           bash pd_python/phase_1.sh iteration_no n_cpus path_to_log_file path_to_tensorflow_venv
 
-**Phase 2.** 2D to 3D conversion from SMILES to sdf
+**Phase 2. 2D to 3D conversion from SMILES to sdf**
 The three files created in the SMILES folder in phase 1 (train, valid and test) need to be converted to 3D sdf format for docking. This includes assigning protonation states and generate 3D conformations, and can be done with different free (e.g. [openbabel](https://openbabel.org/docs/dev/Command-line_tools/babel.html)) or licensed programs (e.g. [omega](https://www.eyesopen.com/omega)). For example, with OpenEye omega program protonate the molecules using 
         
           fixpka -in in_file.smi -out output_file.smi
@@ -60,7 +60,7 @@ and convert the smi file obtained to sdf by running
                                        
 This will take >4-5 hours using 20 CPUs for one million molecules. Note that you may want to create more than 1 conformation per molecule depending on the docking software
 
-**Phase 3.** Molecular docking 
+**Phase 3. Molecular docking**
 1. Run docking for the three compound sets (training, validation and testing)
 2. From the docking results create three csv files with two columns, *ZINC_ID*, *r_i_docking_score* (use these exact headings):
     - ZINC_ID column will have IDs of the molecules (use the same heading even if you are not screening ZINC)
@@ -68,7 +68,7 @@ This will take >4-5 hours using 20 CPUs for one million molecules. Note that you
 3. Name the csv files as training_labels.txt, validation_labels.txt, testing_labels.txt
 4. Put the three files in the respective iteration folder
 
-**Phase 4.** Training of neural networks models
+**Phase 4. Training of neural networks models**
 1. To generate bash files with different hyperparameters
     - Activate the tensorflow environment and run
      
@@ -76,7 +76,7 @@ This will take >4-5 hours using 20 CPUs for one million molecules. Note that you
 
 2. Execute the 12 bash scripts created in protein_folder_path/protein/iteration_no/simple_job
     
-**Phase 5.** Choice of best hyperparameter and use it to predict the entire database
+**Phase 5. Choice of best hyperparameter and use it to predict the entire database**
 1. For selecting the best hyperparameter run 
                  
           python hyperparameter_result_evaluation.py -n_it iteration_no -protein protein_name -file_path path_to_protein -mdd morgan_directory_path
