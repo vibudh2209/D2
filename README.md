@@ -1,30 +1,48 @@
-# Progressive Docking 2.0 – Accelerate virtual screening by 50X 
+# Progressive Docking 2.0 – accelerate virtual screening by 50X 
 
 Progressive docking 2.0 (PD2.0) is a deep learning-based tool that we developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3B molecules) using your favourite docking program in 1-2 weeks depending on the resources available to you. By using PD2.0 we were able to screen 570 million molecules from ZINC15 using 60 CPU cores and 4 GPUs in about 2 weeks. For further information please refer to our [paper](https://www.google.com/).
 
-**Prerequisites**
+Prerequisites
+-------------
+
 The following are the minimal prerequisites needed for running PD2.0:
 - Package installer for python [pip](https://pypi.org/project/pip/)
-- [Anaconda] (https://www.anaconda.com/distribution/)
-- Virtual environment with python3. Within the environment install [RDKIT](https://rdkit.readthedocs.io/en/latest/Install.html#how-to-get-conda) and wget (pip install wget)
+- [Anaconda](https://www.anaconda.com/distribution/)
+- Virtual environment with python3. Within the environment install [rdkit](https://rdkit.readthedocs.io/en/latest/Install.html#how-to-get-conda) and wget (pip install wget)
 - Virtual environment (different from previous one) with python3. Within the environment install tensorflow-gpu (pip install tensorflow_gpu), pandas (pip install pandas), numpy (pip install numpy), keras (pip install keras), matplotlib (pip install matplotlib) and sklearn (pip install scikit-learn)
-- A program to create 3D conformations from SMILES (e.g. OpenEye omega, [openbabel
+- A program to create 3D conformations from SMILES (e.g. OpenEye [omega](https://www.eyesopen.com/omega), [openbabel](https://open-babel.readthedocs.io/en/latest/3DStructureGen/Overview.html)
 - Docking program 
-To run PD2.0 you will need:
-•	SMILES for the entire database to virtually screen. For example, to get all the SMILES of ZINC15 database go here and download the 2D SMILES (.smi) in url format. Once you have all the urls in a text file do the following:
-•	Activate the rdkit environment (conda activate environment_name)
-•	Run the following command
- python pd_python/download_zinc15.py -up url_file_path -fp destination_path -fn name_of_smile_folder -tp num_cpus
-•	This step can take few hours, and ~84GB memory for 1.3 billion molecules.
-•	Morgan descriptors for all the SMILES. For this step do the following:
-•	Activate the rdkit environent (conda activate environment_name)
-•	Run the following command
-python pd_python/Morgan_fing.py -sfp path_to_smile_folder -fp path_where_you_want_morgan_folder -fn name_of_morgan_folder -tp num_cpus
-•	Use as many CPUs as possible to speed the process. It can take more than 1 day to finish (depending on the number of molecules)
-•	It will take ~260GB memory for 1.3 billion molecules.
-There are 5 phases to the method (for more details please check the example folder):
-0.	Create a folder with the name of the target and create a text file with name "logs.txt" inside it
-•	logs file should follow this format. An example can be found here
+
+Download and prepare compounds for PD2.0
+----------------------------------------
+
+To run PD2.0 you need to download the SMILES of the compounds and calculate the Morgan fingerprints for all of them. 
+
+**SMILES**
+
+- Download the SMILES for all the molecules from the database. For large databases, SMILES are usually downloaded in url format. For example, to get all the SMILES of ZINC15 database go [here](https://zinc15.docking.org/tranches/home/) and download the 2D SMILES (.smi) in url format.
+- Activate the rdkit environment (conda activate environment_name)
+- Run the following command
+
+         python pd_python/download_zinc15.py -up url_file_path -fp destination_path -fn name_of_smile_folder -tp num_cpus
+
+- This step can take few hours, and ~84GB memory for 1.3 billion molecules
+
+**MORGAN FINGERPRINTS**
+
+- To calculate the Morgan descriptors for all the SMILES activate the rdkit environent (conda activate environment_name)
+- Run the following command
+
+              python pd_python/Morgan_fing.py -sfp path_to_smile_folder -fp path_where_you_want_morgan_folder -fn name_of_morgan_folder -tp num_cpus
+- Use as many CPUs as possible to speed the process. It can take more than 1 day to finish (depending on the number of molecules)
+- This step will take ~260GB memory for 1.3 billion molecules
+
+Run PD2.0
+---------
+
+PD2.0 is divided in 5 sequential phases (for more details please check the example folder):
+0.	Create a folder with the name of the target and a text file named "logs.txt" inside it
+   - logs file should follow this format. An example can be found here
 1.	Phase 1: random sampling of a fixed number of molecules (e.g. 3 millions) from the entire dataset, getting the Morgan fingerprint and the SMILES
 •	Here based on the computational power available change the logs file for number of molecules to be sampled (these same number of molecules will be docked later on). For iteration 1 try to keep the number as high as possible (you can decrease it for later iterations)
 •	Run 
