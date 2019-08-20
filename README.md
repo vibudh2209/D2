@@ -69,8 +69,7 @@ This will take >4-5 hours using 20 CPUs for one million molecules. Note that you
 4. Put the three files in the respective iteration folder
 
 **Phase 4.** *Training of neural networks models*
-1. To generate bash files with different hyperparameters
-    - Activate the tensorflow environment and run
+1. To generate bash files with different hyperparameters activate the tensorflow environment and run
      
           python simple_job_models_noslurm.py -n_it iteration_no -mdd morgan_directory_path -time training_time(1-2hrs) -protein protein_name -file_path path_to_protein_folder -pdfp pd_python_folder_path -tfp tensorflow_venv_path
 
