@@ -49,12 +49,13 @@ def train_valid_test(file_name,iteration=0):
         test_ind_dict[k] = 1
     with open(file_name,'r') as ref:
         for ind,line in enumerate(ref):
+            tmpp = line.strip().split(',')[0]
             if ind in train_ind_dict.keys():
-                train_set.write(line[:16]+'\n')
+                train_set.write(tmpp+'\n')
             elif ind in valid_ind_dict.keys():
-                valid_set.write(line[:16]+'\n')
+                valid_set.write(tmpp+'\n')
             elif ind in test_ind_dict.keys():
-                test_set.write(line[:16]+'\n')
+                test_set.write(tmpp+'\n')
     train_set.close()
     valid_set.close()
     test_set.close()

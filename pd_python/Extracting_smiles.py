@@ -58,7 +58,7 @@ def get_mol_final(fname):
     to_return = {}
     with open(sdf_directory+"/zinc_ids_each_file/"+fname.split('/')[-1]+'.txt','r') as ref:
         for line in ref:
-            tmp = line[:16]
+            tmp = line.strip().split(',')[0]
             if tmp in final_dict:
                 to_return[tmp] = 0
     return to_return
@@ -83,7 +83,7 @@ def get_mol(fname):
     
     with open(sdf_directory+"/zinc_ids_each_file/"+fname.split('/')[-1]+'.txt','r') as ref:
         for line in ref:
-            tmp = line[:16]
+            tmp = line.strip().split(',')[0]
             if tmp in train:
                 to_return_train[tmp] = 0
             if tmp in valid:
@@ -102,18 +102,19 @@ def extract_smile(file_name,train,valid,test):
         ref.readline()
         flag=0
         for line in ref:
-            if line[-17:-1] in train.keys():
-                train[line[-17:-1]]+=1
+            tmpp = line.strip().split()[-1]
+            if tmpp in train.keys():
+                train[tmpp]+=1
                 fn = 1
-                if train[line[-17:-1]]==1: flag=1
-            elif line[-17:-1] in valid.keys():
-                valid[line[-17:-1]]+=1
+                if train[tmpp]==1: flag=1
+            elif tmpp in valid.keys():
+                valid[tmpp]+=1
                 fn = 2
-                if valid[line[-17:-1]]==1: flag=1
-            elif line[-17:-1] in test.keys():
-                test[line[-17:-1]]+=1
+                if valid[tmpp]==1: flag=1
+            elif tmpp in test.keys():
+                test[tmpp]+=1
                 fn = 3
-                if test[line[-17:-1]]==1: flag=1
+                if test[tmpp]==1: flag=1
             if flag==1:
                 if fn==1:
                     ref1.write(line)
@@ -134,9 +135,10 @@ def extract_smile_final(all_mols,file_name):
         ref.readline()
         flag=0
         for line in ref:
-            if line[-17:-1] in all_mols.keys():
-                all_mols[line[-17:-1]]+=1
-                if all_mols[line[-17:-1]]==1: flag=1
+            tmpp = line.strip().split()[-1]
+            if tmpp in all_mols.keys():
+                all_mols[tmpp]+=1
+                if all_mols[tmpp]==1: flag=1
             if flag==1:
                 ref1.write(line)
             flag = 0
@@ -157,8 +159,9 @@ def smile_duplicacy(f_name):
     ref1 = open(f_name[:-4]+'_updated.smi','a')
     with open(f_name,'r') as ref:
         for line in ref:
-            if line[-17:-1] not in mol_list:
-                mol_list[line[-17:-1]] = 1
+            tmpp = line.strip().split()[-1]
+            if tmpp not in mol_list:
+                mol_list[tmpp] = 1
                 flag=1
             if flag==1:
                 ref1.write(line)

@@ -14,7 +14,8 @@ parser.add_argument('-n_it','--iteration_no',required=True)
 parser.add_argument('-protein','--protein',required=True)
 parser.add_argument('-file_path','--file_path',required=True)
 parser.add_argument('-t_pos','--tot_process',required=True)
-parser.add_argument('-sof','--software',required=True)
+parser.add_argument('-kw','--key_word',required=True)
+#parser.add_argument('-mk','--mol_key',required=True)
 
 io_args = parser.parse_args()
 
@@ -23,18 +24,20 @@ n_it = int(io_args.iteration_no)
 protein = io_args.protein
 file_path = io_args.file_path
 tot_process = int(io_args.tot_process)
-sof = io_args.software
+key_word = io_args.key_word
+#mol_key = io_args.mol_key
 
 if is_final=='False' or is_final=='false':
     is_final = False
 elif is_final=='True' or is_final=='true':
     is_final = True
 
-if sof=='GLIDE':
-    key_word = 'r_i_docking_score'
-elif sof=='OEDDOCKING':
-    key_word = 'FRED Chemgauss4 score'
+#if sof=='GLIDE':
+#    key_word = 'r_i_docking_score'
+#elif sof=='OEDDOCKING':
+#    key_word = 'FRED Chemgauss4 score'
 
+#mol_key = 'ZINC'
 print(key_word)
 
 def extract_glide_score(filen):
@@ -42,33 +45,32 @@ def extract_glide_score(filen):
     try:
         with gzip.open(filen,'rt') as ref:
             for line in ref:
-                if line[:4]=="ZINC":
-                    zinc_id = line.rstrip()
-                    for lines in ref:
-                        tmp = lines.rstrip().split('<')[-1]
-                        if key_word==tmp[:-1]:
-                            tmpp = float(ref.readline().rstrip())
-                            if tmpp>50 or tmpp<-50:
-                                print(zinc_id,tmpp)
-                                break
+                zinc_id = line.rstrip()
+                for lines in ref:
+                    tmp = lines.rstrip().split('<')[-1]
+                    if key_word==tmp[:-1]:
+                        tmpp = float(ref.readline().rstrip())
+                        if tmpp>50 or tmpp<-50:
+                            print(zinc_id,tmpp)
+                        else:
                             scores.append([zinc_id,tmpp])
-                            break
+                    if lines[:4]=='$$$$':
+                        break
     
     except:
         with open(filen,'r') as ref:
             for line in ref:
-                if line[:4]=="ZINC":
-                    zinc_id = line.rstrip()
-                    for lines in ref:
-                        tmp = lines.rstrip().split('<')[-1]
-                        #print(tmp[:-1],key_word,tmp[:-1]==key_word)
-                        if key_word==tmp[:-1]:
-                            tmpp = float(ref.readline().rstrip())
-                            if tmpp>50 or tmpp<-50:
-                                print(zinc_id,tmpp)
-                                break
+                zinc_id = line.rstrip()
+                for lines in ref:
+                    tmp = lines.rstrip().split('<')[-1]
+                    if key_word==tmp[:-1]:
+                        tmpp = float(ref.readline().rstrip())
+                        if tmpp>50 or tmpp<-50:
+                            print(zinc_id,tmpp)
+                        else:
                             scores.append([zinc_id,tmpp])
-                            break
+                    if lines[:4]=='$$$$':
+                        break 
                     
 
     with open(file_path+'/'+protein+'/iteration_'+str(n_it)+'/'+filen.split('/')[-1].split('.')[0]+'_'+'labels.txt','w') as ref:

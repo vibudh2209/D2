@@ -22,15 +22,18 @@ for i in range(1,n_it):
     with open(glob.glob(file_path+'/'+protein+'/iteration_'+str(i)+'/training_labels*')[-1]) as ref:
         ref.readline()
         for line in ref:
-            old_dict[line[-16:]] = 1
+            tmpp = line.strip().split(',')[-1]
+            old_dict[tmpp] = 1
     with open(glob.glob(file_path+'/'+protein+'/iteration_'+str(i)+'/validation_labels*')[-1]) as ref:
         ref.readline()
         for line in ref:
-            old_dict[line[-16:]] = 1
+            tmpp = line.strip().split(',')[-1]
+            old_dict[tmpp] = 1
     with open(glob.glob(file_path+'/'+protein+'/iteration_'+str(i)+'/testing_labels*')[-1]) as ref:
         ref.readline()
         for line in ref:
-            old_dict[line[-16:]] = 1
+            tmpp = line.strip().split(',')[-1]
+            old_dict[tmpp] = 1
 
 t=time.time()
 new_train = {}
@@ -38,13 +41,16 @@ new_valid = {}
 new_test = {}
 with open(glob.glob(file_path+'/'+protein+'/iteration_'+str(n_it)+'/train_set*')[-1]) as ref:
     for line in ref:
-        new_train[line[:16]] = 1
+        tmpp = line.strip().split(',')[0]
+        new_train[tmpp] = 1
 with open(glob.glob(file_path+'/'+protein+'/iteration_'+str(n_it)+'/valid_set*')[-1]) as ref:
     for line in ref:
-        new_valid[line[:16]] = 1
+        tmpp = line.strip().split(',')[0]
+        new_valid[tmpp] = 1
 with open(glob.glob(file_path+'/'+protein+'/iteration_'+str(n_it)+'/test_set*')[-1]) as ref:
     for line in ref:
-        new_test[line[:16]] = 1
+        tmpp = line.strip().split(',')[0]
+        new_test[tmp] = 1
 print(time.time()-t)
 
 t=time.time()
