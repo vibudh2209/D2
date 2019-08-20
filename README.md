@@ -68,15 +68,15 @@ This will take >4-5 hours using 20 CPUs for one million molecules. Note that you
 3. Name the csv files as training_labels.txt, validation_labels.txt, testing_labels.txt
 4. Put the three files in the respective iteration folder
 
-**Phase 4.** Training of neural networks models and choice of best model to predict all molecules
-1. First, generate bash files with different hyperparameters
+**Phase 4.** Training of neural networks models
+1. To generate bash files with different hyperparameters
     - Activate the tensorflow environment and run
      
           python simple_job_models_noslurm.py -n_it iteration_no -mdd morgan_directory_path -time training_time(1-2hrs) -protein protein_name -file_path path_to_protein_folder -pdfp pd_python_folder_path -tfp tensorflow_venv_path
 
-    - Execute the 12 bash scripts created in protein_folder_path/protein/iteration_no/simple_job
+2. Execute the 12 bash scripts created in protein_folder_path/protein/iteration_no/simple_job
     
-**Phase 5.** Next step is chose the best hyperparameter and use it to predict the entire database
+**Phase 5.** Choice of best hyperparameter and use it to predict the entire database
 1. For selecting the best hyperparameter run 
                  
           python hyperparameter_result_evaluation.py -n_it iteration_no -protein protein_name -file_path path_to_protein -mdd morgan_directory_path
