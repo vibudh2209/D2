@@ -20,13 +20,13 @@ To run PD2.0 you need to download the SMILES of the compounds and calculate the 
 
 **SMILES**
 
-- Download the SMILES for all the molecules from the database. For large databases, SMILES are usually downloaded in url format. For example, to get all the SMILES of ZINC15 database go [here](https://zinc15.docking.org/tranches/home/) and download the 2D SMILES (.smi) in url format
+- Download the SMILES for all the molecules from database. For large databases, SMILES are usually downloaded in url format. For example, to get all the SMILES of ZINC15 database go [here](https://zinc15.docking.org/tranches/home/) and download the 2D SMILES (.smi) in url format
 - Activate the rdkit environment (conda activate environment_name)
 - Run the following command
 
           python pd_python/download_zinc15.py -up url_file_path -fp destination_path -fn name_of_smile_folder -tp num_cpus
 
-This step can take few hours, and ~84GB memory for 1.3 billion molecules.
+This step can take few hours, and ~84GB memory for 1.3 billion molecules. Please not that this step will download SMILES from ZINC15. You can skip this step if you have already the database in SMILES format, or if you want to use a different database than ZINC15.
 
 **MORGAN FINGERPRINTS**
 
