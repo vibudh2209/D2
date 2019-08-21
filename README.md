@@ -101,5 +101,5 @@ Repeat the above phases 1-5 for as many iterations as it takes to get a fixed nu
 Useful tips
 -----------
 
-1. In case you are in hurry and want to select top n molecules after an iteration (for example you are done with 3 iterations and 30 million molecules are left but you do not want to run another iteration, selecting the top 10 million compounds) run:
+- In case you are in hurry and want to select top n molecules after an iteration (for example you are done with 3 iterations and 30 million molecules are left but you do not want to run another iteration, selecting the top 10 million compounds) run:
 python Prediction_morgan_1024_top_n.py -protein protein_name -it iteration_no -file_path path_to_protein -top_n top_n_molecules
