@@ -54,7 +54,7 @@ The three files created in the SMILES folder in phase 1 (train, valid and test) 
         
           fixpka -in in_file.smi -out output_file.smi
 
-and convert the smi file obtained to sdf by running
+and convert the obtained smi file to sdf by running
                                         
           oeomega classic -in file_after_protonation.smi -out name_of_sdf_file.sdf -maxconfs 1 -strictstereo false -mpi_np number_of_cpus -log log_file_name.log -prefix prefix_name
                                        
@@ -71,9 +71,10 @@ This phase will take >4-5 hours using 20 CPUs for 1 million molecules. Note that
 **Phase 4.** *Training of neural networks models*
 1. To generate bash files with different hyperparameters activate the tensorflow environment and run
      
-          python simple_job_models_noslurm.py -n_it iteration_no -mdd morgan_directory_path -time training_time(1-2hrs) -protein protein_name -file_path path_to_protein_folder -pdfp pd_python_folder_path -tfp tensorflow_venv_path
+          python simple_job_models_noslurm.py -n_it iteration_no -mdd morgan_directory_path -time training_time -protein protein_name -file_path path_to_protein_folder -pdfp pd_python_folder_path -tfp tensorflow_venv_path
 
-2. Execute the 12 bash scripts created in protein_folder_path/protein/iteration_no/simple_job
+2. For training time, specify a value between 1 and 2 (1 to 2 hours)
+3. Execute the 12 bash scripts created in protein_folder_path/protein/iteration_no/simple_job
     
 **Phase 5.** *Choice of best hyperparameter and prediction of the entire database*
 1. For selecting the best hyperparameter run 
