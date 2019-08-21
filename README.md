@@ -26,7 +26,7 @@ To run PD2.0 you need to download the SMILES of the compounds and calculate the 
 
           python pd_python/download_zinc15.py -up url_file_path -fp destination_path -fn name_of_smile_folder -tp num_cpus
 
-This step can take few hours, and ~84GB memory for 1.3 billion molecules
+This step can take few hours, and ~84GB memory for 1.3 billion molecules.
 
 **MORGAN FINGERPRINTS**
 
@@ -36,7 +36,7 @@ This step can take few hours, and ~84GB memory for 1.3 billion molecules
           python pd_python/Morgan_fing.py -sfp path_to_smile_folder -fp path_where_you_want_morgan_folder -fn name_of_morgan_folder -tp num_cpus
 
 - Use as many CPUs as possible to speed the process. It can take more than 1 day to finish (depending on the number of molecules)
-This step will take ~260GB memory for 1.3 billion molecules
+This step will take ~260GB memory for 1.3 billion molecules.
 
 Run PD2.0
 ---------
@@ -58,7 +58,7 @@ and convert the smi file obtained to sdf by running
                                         
           oeomega classic -in file_after_protonation.smi -out name_of_sdf_file.sdf -maxconfs 1 -strictstereo false -mpi_np number_of_cpus -log log_file_name.log -prefix prefix_name
                                        
-This will take >4-5 hours using 20 CPUs for one million molecules. Note that you may want to create more than 1 conformation per molecule depending on the docking software
+This phase will take >4-5 hours using 20 CPUs for 1 million molecules. Note that you may want to create more than 1 conformation per molecule depending on the docking software.
 
 **Phase 3.** *Molecular docking*
 1. Run docking for the three compound sets (training, validation and testing)
