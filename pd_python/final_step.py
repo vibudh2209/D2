@@ -38,7 +38,7 @@ def get_pred_zids(fname):
 	zids = {}
 	with open(fname,'r') as ref:
 		for line in ref:
-			zids[line.rstrip()] = 1
+			zids[line.rstrip().split(',')[0]] = 1
 	return zids
 
 def get_mol_from_zid(data):
@@ -47,18 +47,23 @@ def get_mol_from_zid(data):
 	ref1 = gzip.open(file_path+'/'+protein+'/after_iteration/already_docked/'+name+'_'+str(i)+'.sdf.gz','wb')
 	with gzip.open(sdfname,'rb') as ref:
 		for line in ref:
-			if line.decode('utf-8')[:4] == 'ZINC':
-				tmp = line.decode('utf-8').strip()
-				#print(tmp)
-				if tmp in zids:
-					#print(tmp)
-					if zids[tmp] == 0:
-						zids[tmp] +=1
-						ref1.write(line)
-						for lines in ref:
-							ref1.write(lines)
-							if lines.decode('utf-8')[:4]=='$$$$':
-								break
+			tmp = line.decode('utf-8').strip()
+			if tmp in zids:
+				if zids[tmp] == 0:
+					zids[tmp] +=1
+					ref1.write(line)
+					for lines in ref:
+						ref1.write(lines)
+						if lines.decode('utf-8')[:4]=='$$$$':
+							break
+				else:
+					for lines in ref:
+						if lines.decode('utf-8')[:4]=='$$$$':
+							break
+			else:
+				for lines in ref:
+					if lines.decode('utf-8')[:4]=='$$$$':
+						break
 	ref1.close()
 
 

@@ -50,7 +50,7 @@ with open(glob.glob(file_path+'/'+protein+'/iteration_'+str(n_it)+'/valid_set*')
 with open(glob.glob(file_path+'/'+protein+'/iteration_'+str(n_it)+'/test_set*')[-1]) as ref:
     for line in ref:
         tmpp = line.strip().split(',')[0]
-        new_test[tmp] = 1
+        new_test[tmpp] = 1
 print(time.time()-t)
 
 t=time.time()
