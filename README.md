@@ -28,6 +28,16 @@ To run PD2.0 you need to download the SMILES of the compounds and calculate the 
 
 This step can take few hours, and ~84GB memory for 1.3 billion molecules. Please not that this step will download SMILES from ZINC15. You can skip this step if you have already the database in SMILES format, or if you want to use a different database than ZINC15.
 
+
+**SMILES simplification**
+
+- In case there are too many smile files and you want to decrease the number and have similar number of molecules in each file
+- Activate tensorflow environment
+- Run the following command
+
+          python pd_python/smile_simplification.py -sfp smile_folder -tp num_cpus -tn total_number_of_files
+
+
 **MORGAN FINGERPRINTS**
 
 - To calculate the Morgan descriptors for all the SMILES activate the rdkit environment (conda activate environment_name)
