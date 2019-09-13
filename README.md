@@ -110,4 +110,4 @@ Useful tips
         
 - If you want to reorganize a large number of SMILES files into fewer, evenly populated files, you can activate the tensorflow environment and run
 
-          python pd_python/smile_simplification.py -sfp smile_folder -tp num_cpus -tn total_number_of_file
+          python pd_python/smile_simplification.py -sfp smile_folder -tp num_cpus -tn final_number_of_files
