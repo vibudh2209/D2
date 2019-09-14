@@ -62,7 +62,7 @@ This phase will take >4-5 hours using 20 CPUs for 1 million molecules. Note that
 
 **Phase 3.** *Molecular docking*
 1. Run docking for the three compound sets (training, validation and testing)
-2. From the docking results create three csv files with two columns, *ZINC_ID*, *r_i_docking_score* (use these exact headings):
+2. From the docking results create three **csv** files with two columns, *ZINC_ID*, *r_i_docking_score* (use these exact headings):
     - ZINC_ID column will have IDs of the molecules (use the same heading even if you are not screening ZINC)
     - r_i_docking_score will have the docking score values 
 3. Name the csv files as training_labels.txt, validation_labels.txt, testing_labels.txt
@@ -71,10 +71,11 @@ This phase will take >4-5 hours using 20 CPUs for 1 million molecules. Note that
 **Phase 4.** *Training of neural networks models*
 1. To generate bash files with different hyperparameters activate the tensorflow environment and run
      
-          python simple_job_models_noslurm.py -n_it iteration_no -mdd morgan_directory_path -time training_time -protein protein_name -file_path path_to_protein_folder -pdfp pd_python_folder_path -tfp tensorflow_venv_path
+          python simple_job_models_noslurm.py -n_it iteration_no -mdd morgan_directory_path -time training_time -protein protein_name -file_path path_to_protein_folder -pdfp pd_python_folder_path -tfp tensorflow_venv_path -min_last minimum_molecules_at_last_iteration
 
 2. For training time, specify a value between 1 and 2 (1 to 2 hours)
-3. Execute the 12 bash scripts created in protein_folder_path/protein/iteration_no/simple_job
+3. For minimum_molecules_at_last_iteration put something like 100-200 (for details please read the paper, default 200)
+4. Execute the 12 bash scripts created in protein_folder_path/protein/iteration_no/simple_job
     
 **Phase 5.** *Choice of best hyperparameter and prediction of the entire database*
 1. For selecting the best hyperparameter run 
@@ -83,7 +84,7 @@ This phase will take >4-5 hours using 20 CPUs for 1 million molecules. Note that
                 
 2. Generate bash files for individual Morgan files (for prediction):
 
-          python simple_job_predictions.py -protein protein_name -file_path path_to_protein -n_it iteration_no -mdd morgan_directory
+          python simple_job_predictions_noslurm.py -protein protein_name -file_path path_to_protein -n_it iteration_no -mdd morgan_directory
                 
 3. Execute all the bash scripts in protein_folder_path/protein/iteration_no/simple_job_predictions
 4. To check the number of molecules left after each iteration just load the protein_folder_path/protein/iteration_no/morgan_1024_predictions/passed_file_ct.txt and sum the last column. You can compare this number with predicted molecule left: 'protein_folder_path/protein/iteration_no/best_model_stats.txt' and verify whether they are close.
@@ -106,3 +107,7 @@ Useful tips
 
 
           python Prediction_morgan_1024_top_n.py -protein protein_name -it iteration_no -file_path path_to_protein -top_n top_n_molecules
+        
+- If you want to reorganize a large number of SMILES files into fewer, evenly populated files, you can activate the tensorflow environment and run
+
+          python pd_python/smile_simplification.py -sfp smile_folder -tp num_cpus -tn final_number_of_files

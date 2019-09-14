@@ -58,16 +58,16 @@ per_file = int(top_n/t_f)
 
 ct=0
 fn=1
-for zid in all_molecules.ZINC_ID:
+for zid,prob in zip(all_molecules.ZINC_ID,all_molecules.probability):
     ct+=1
     if fn==t_f:
-        files_to_make[fn-1].write(zid+'\n')
+        files_to_make[fn-1].write(zid+','+str(prob)+'\n')
     elif ct==per_file:
-        files_to_make[fn-1].write(zid+'\n')
+        files_to_make[fn-1].write(zid+','+str(prob)+'\n')
         fn+=1
         ct=0
     else:
-        files_to_make[fn-1].write(zid+'\n')
+        files_to_make[fn-1].write(zid+','+str(prob)+'\n')
 
 for f in files_to_make:
     f.close()
