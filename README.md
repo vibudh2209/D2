@@ -1,4 +1,4 @@
-# Progressive Docking 2.0 – Accelerate Virtual Screening by 50X 
+# Progressive Docking 2.0 – Deep learning for acceleration of virtual screening 
 
 Progressive docking 2.0 (PD2.0) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3B molecules) using your favourite docking program in 1-2 weeks depending on the resources available to you. By using PD2.0 we were able to screen 570 million molecules from ZINC15 using 60 CPU cores and 4 GPUs in about 2 weeks. For further information please refer to our [paper](https://www.google.com/).
 
