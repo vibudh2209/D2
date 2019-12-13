@@ -1,7 +1,7 @@
-path_to_project_folder
+path_project_folder
 project_folder
-path/grid_file   #(in case of docking without a grid file, either leave this line empty or write some gibberish)
-path/morgan_folder
-path/smile_folder
+path_grid_file/grid_file                   #(in case of docking without a grid file, either leave this line empty or write some gibberish)
+path_morgan_folder/morgan_folder
+path_smile_folder/smile_folder
 Docking_program_name
 number_of_molecules_to_sample
