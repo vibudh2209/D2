@@ -5,43 +5,56 @@ Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelera
 Prerequisites
 -------------
 
-The following are the minimal prerequisites needed for running D<sup>2</sup>:
+Before running D<sup>2</sup>, you need to install the following packages:
 - Package installer for python [pip](https://pypi.org/project/pip/)
 - [Anaconda](https://www.anaconda.com/distribution/)
-- Virtual environment with python3. Within the environment install [rdkit](https://rdkit.readthedocs.io/en/latest/Install.html#how-to-get-conda) and wget (pip install wget)
-- Virtual environment (different from previous one) with python3. Within the environment install tensorflow-gpu (pip install tensorflow_gpu), pandas (pip install pandas), numpy (pip install numpy), keras (pip install keras), matplotlib (pip install matplotlib) and sklearn (pip install scikit-learn)
 - A program to create 3D conformations from SMILES
-- Docking program 
+- Docking program
 
-Download and prepare compounds for (D<sup>2</sup>)
+Then you need to set up the following virtual environments:
+- Python3 virtual environment with python3. Install [rdkit](https://rdkit.readthedocs.io/en/latest/Install.html#how-to-get-conda) and wget (pip install wget) within this environment.
+- Python3 virtual environment (different from previous one). Install tensorflow-gpu (pip install tensorflow_gpu), pandas (pip install pandas), numpy (pip install numpy), keras (pip install keras), matplotlib (pip install matplotlib) and sklearn (pip install scikit-learn) within the environment.
+
+Virtual environments can be activated using conda:
+
+          conda activate environment_name
+ 
+Preparing molecules for D<sup>2</sup>
 ----------------------------------------
 
-To run PD2.0 you need to download the SMILES of the compounds and calculate the Morgan fingerprints for all of them. 
+To run the code you need to download the SMILES of the moelcules and calculate their Morgan fingerprint with size of 1024 bits and radius of 2 as QSAR descriptors. 
 
-**SMILES**
+**GET SMILES FROM ZINC**
+ 
+- Go [here](https://zinc15.docking.org/tranches/home/) and download the 2D SMILES (.smi) in url format
+- Activate the virtual environment where rdkit was installed
+- Run
 
-- Download the SMILES for all the molecules from database. For large databases, SMILES are usually downloaded in url format. For example, to get all the SMILES of ZINC15 database go [here](https://zinc15.docking.org/tranches/home/) and download the 2D SMILES (.smi) in url format
-- Activate the rdkit environment (conda activate environment_name)
+          python download_zinc15.py -up url_file_path -fp destination_folder_path -fn name_of_smile_folder -tp num_cpus
+          
+  This step can take few hours, and ~84GB memory for 1.36 billion molecules.
+- Reorganize the SMILES files into a number of evenly populated files equal to the number of CPUs used for phase 1 (see below). Activate the tensorflow environment and run
+
+          python pd_python/smile_simplification.py -sfp smile_folder -tp num_cpus -tn final_number_of_files
+
+- You can skip this step if you have already the database in SMILES format, or if you want to use a different database than ZINC15
+
+**CALCULATION OF MORGAN FINGERPRINTS**
+
+- Activate the rdkit environment
 - Run the following command
 
-          python pd_python/download_zinc15.py -up url_file_path -fp destination_path -fn name_of_smile_folder -tp num_cpus
+          python pd_python/Morgan_fing.py -sfp path_to_smile_folder -fp destination_folder_path -fn name_of_morgan_folder -tp num_cpus
 
-This step can take few hours, and ~84GB memory for 1.3 billion molecules. Please not that this step will download SMILES from ZINC15. You can skip this step if you have already the database in SMILES format, or if you want to use a different database than ZINC15.
+- Use as many CPUs as possible to speed up the process. This step takes ~260GB memory for 1.36 billion molecules
 
-**MORGAN FINGERPRINTS**
-
-- To calculate the Morgan descriptors for all the SMILES activate the rdkit environment (conda activate environment_name)
-- Run the following command
-
-          python pd_python/Morgan_fing.py -sfp path_to_smile_folder -fp path_where_you_want_morgan_folder -fn name_of_morgan_folder -tp num_cpus
-
-- Use as many CPUs as possible to speed the process. It can take more than 1 day to finish (depending on the number of molecules)
-This step will take ~260GB memory for 1.3 billion molecules.
-
-Run PD2.0
+Run D<sup>2</sup>
 ---------
 
-Before starting PD2.0, create a folder with the name of the target. Create a text file named "logs.txt" inside it, following this [format](temp/logs.txt). PD2.0 is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted good molecules is reached (for more details please check the example folder):
+**Create the project**
+Before starting D<sup>2</sup>, create a project folder. Within it, create a text file named "logs.txt", following this [format](temp/logs.txt). 
+
+PD2.0 is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted good molecules is reached (for more details please check the example folder):
 
 **Phase 1.** *Random sampling of a fixed number of molecules (e.g. 3 millions) from the entire dataset, getting the Morgan fingerprint and the SMILES*
 1. The number of molecules to be sampled is defined in the logs.txt file. As these molecules will be docked later, set the number of molecules based on the computational power available to you. For iteration 1 try to keep the number as high as possible (you can decrease it for later iterations)
@@ -107,7 +120,3 @@ Useful tips
 
 
           python Prediction_morgan_1024_top_n.py -protein protein_name -it iteration_no -file_path path_to_protein -top_n top_n_molecules
-        
-- If you want to reorganize a large number of SMILES files into fewer, evenly populated files, you can activate the tensorflow environment and run
-
-          python pd_python/smile_simplification.py -sfp smile_folder -tp num_cpus -tn final_number_of_files
