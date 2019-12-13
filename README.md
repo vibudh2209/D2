@@ -1,11 +1,11 @@
 # Deep Docking – Accelerate Virtual Screening by 50X 
 
-Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program in 1-2 weeks depending on the resources available to you. By using D<sup>2</sup> we were able to screen 1.36 billion million molecules from ZINC15 using 60 CPU cores and 4 GPUs in about 2 weeks. For further information please refer to our [paper](https://www.google.com/).
+Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program. For further information please refer to our [paper](https://www.google.com/).
 
 Prerequisites
 -------------
 
-The following are the minimal prerequisites needed for running PD2.0:
+The following are the minimal prerequisites needed for running D<sup>2</sup>:
 - Package installer for python [pip](https://pypi.org/project/pip/)
 - [Anaconda](https://www.anaconda.com/distribution/)
 - Virtual environment with python3. Within the environment install [rdkit](https://rdkit.readthedocs.io/en/latest/Install.html#how-to-get-conda) and wget (pip install wget)
@@ -13,7 +13,7 @@ The following are the minimal prerequisites needed for running PD2.0:
 - A program to create 3D conformations from SMILES
 - Docking program 
 
-Download and prepare compounds for PD2.0
+Download and prepare compounds for (D<sup>2</sup>)
 ----------------------------------------
 
 To run PD2.0 you need to download the SMILES of the compounds and calculate the Morgan fingerprints for all of them. 
