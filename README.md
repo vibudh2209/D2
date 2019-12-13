@@ -54,35 +54,29 @@ Run D<sup>2</sup>
 **Create the project**
 Before starting D<sup>2</sup>, create a project folder. Within it, create a text file named "logs.txt", following this [format](temp/logs.txt). 
 
-PD2.0 is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted good molecules is reached (for more details please check the example folder):
+D<sup>2</sup> is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted virtual hits is reached:
 
-**Phase 1.** *Random sampling of a fixed number of molecules (e.g. 3 millions) from the entire dataset, getting the Morgan fingerprint and the SMILES*
-1. The number of molecules to be sampled is defined in the logs.txt file. As these molecules will be docked later, set the number of molecules based on the computational power available to you. For iteration 1 try to keep the number as high as possible (you can decrease it for later iterations)
-2. Run phase 1:
+**Phase 1.** *Random sampling of molecules*
+1. The number of molecules to be sampled is defined in the logs.txt file. These molecules will be docked later, so choose the number according with the computational resources that are available. In iteration 1 this number will be splitted in three to create initial training, validation and test set. From iteration 2 it will correspond to the number of molecules that are docked and added to the training set. You can change the value between iterations by modifying the logs.txt file
+2. Run phase 1
     
           bash pd_python/phase_1.sh iteration_no n_cpus path_to_log_file path_to_tensorflow_venv
+    
+3. This will create three *.smi* files in a *smile* folder inside the *iteration_no* folder of the project. Note that the name of these files will always be train, valid and test for all iterations even if validation and test set are not modified after the first iteration.
 
-**Phase 2.** *2D to 3D conversion from SMILES to sdf*\
-The three files created in the SMILES folder in phase 1 (train, valid and test) need to be converted to 3D sdf format for docking. This includes assigning protonation states and generate 3D conformations, and can be done with different free (e.g. [openbabel](https://openbabel.org/docs/dev/Command-line_tools/babel.html)) or licensed programs (e.g. [omega](https://www.eyesopen.com/omega)). For example, with OpenEye omega program protonate the molecules using 
-        
-          fixpka -in in_file.smi -out output_file.smi
-
-and convert the obtained smi file to sdf by running
-                                        
-          oeomega classic -in file_after_protonation.smi -out name_of_sdf_file.sdf -maxconfs 1 -strictstereo false -mpi_np number_of_cpus -log log_file_name.log -prefix prefix_name
-                                       
-This phase will take >4-5 hours using 20 CPUs for 1 million molecules. Note that you may want to create more than 1 conformation per molecule depending on the docking software.
+**Phase 2.** *Prepare molecules for docking*
+Files created in phase 1 need to be converted to sdf format for docking. This step includes assigning tautomer and protonation states and generating 3D conformations, and can be done with different free (e.g. [openbabel](https://openbabel.org/docs/dev/Command-line_tools/babel.html)) or licensed programs (e.g. [omega](https://www.eyesopen.com/omega)).
 
 **Phase 3.** *Molecular docking*
-1. Run docking for the three compound sets (training, validation and testing)
+1. Run docking using the created sdf files
 2. From the docking results create three **csv** files with two columns, *ZINC_ID*, *r_i_docking_score* (use these exact headings):
-    - ZINC_ID column will have IDs of the molecules (use the same heading even if you are not screening ZINC)
-    - r_i_docking_score will have the docking score values 
-3. Name the csv files as training_labels.txt, validation_labels.txt, testing_labels.txt
-4. Put the three files in the respective iteration folder
+    - Populate the *ZINC_ID* column with the IDs of molecules (use the same heading even if you are not screening ZINC)
+    - Add the corrseponding scores in the *r_i_docking_score* column
+3. Name the csv files as training_labels.txt, validation_labels.txt, testing_labels.txt accoridng to the original *.smi* file
+4. Put the files in the respective iteration folder
 
-**Phase 4.** *Training of neural networks models*
-1. To generate bash files with different hyperparameters activate the tensorflow environment and run
+**Phase 4.** *Neural network training*
+1. generate bash files for creating neural network models with different set of hyperparameters.  Activate the tensorflow environment and run
      
           python simple_job_models_noslurm.py -n_it iteration_no -mdd morgan_directory_path -time training_time -protein protein_name -file_path path_to_protein_folder -pdfp pd_python_folder_path -tfp tensorflow_venv_path -min_last minimum_molecules_at_last_iteration
 
