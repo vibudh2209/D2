@@ -78,7 +78,7 @@ Convert SMILES from phase 1 to 3D sdf format for docking (if it is not done inte
 2. From the docking results create three *csv* files with two columns, *ZINC_ID*, *r_i_docking_score* (use these exact headings):
     - Populate the *ZINC_ID* column with the IDs of molecules (use the same heading even if you are not screening ZINC)
     - Add the corresponding scores in the *r_i_docking_score* column
-3. Name the *csv* files as training_labels.txt, validation_labels.txt, testing_labels.txt, according with to the original *smi* file used to create files for docking. Follow this this [format](temp/labels.txt)
+3. Name the *csv* files as training_labels.txt, validation_labels.txt, testing_labels.txt, according with to the original *smi* file used to create files for docking. Follow this [format](temp/labels_example.txt)
 4. Put these files in the *iteration_no* folder
 
 **Phase 4.** *Neural network training*
