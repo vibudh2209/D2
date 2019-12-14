@@ -38,14 +38,14 @@ To run the code you need to download the SMILES of the moelcules and calculate t
   This will create a *path_to_smile_folder/smile_folder* folder and download the SMILES within it. This step can take few hours, and ~84GB memory for 1.36 billion molecules.
 - Reorganize the SMILES files into a number of evenly populated files equal to the number of CPUs used for phase 1 (see below). Activate the tensorflow environment and run
 
-          python pd_python/smile_simplification.py -sfp path_smile_folder/smile_folder -tp num_cpus -tn final_number_of_files
+          python smile_simplification.py -sfp path_smile_folder/smile_folder -tp num_cpus -tn final_number_of_files
 
 **CALCULATION OF MORGAN FINGERPRINTS**
 
 - Activate the rdkit environment
 - Run the following command
 
-          python pd_python/Morgan_fing.py -sfp path_smile_folder/smile_folder -fp path_morgan_folder -fn morgan_folder -tp num_cpus
+          python Morgan_fing.py -sfp path_smile_folder/smile_folder -fp path_morgan_folder -fn morgan_folder -tp num_cpus
 
   This will create a *path_to_morgan_folder/morgan_folder* folder, and generate the Morgan fingerprints of 1024 bits of size and radius of 2 within it. It is recommended as many CPUs as possible to speed up the process. This step takes ~260GB memory for 1.36 billion molecules
 
