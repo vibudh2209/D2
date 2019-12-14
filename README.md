@@ -5,7 +5,7 @@ Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelera
 About this repository
 -------------
 
-The *pd_python* folder contains all the scripts that you need to run D<sup>2</sup>. Clone the repo before you start the run. The *slurm* folder contains some examples of scripts to automate D<sup>2</sup> on clusters using slurm queueing system (you might have to change few things, a GUI is also available through *the pd_window_*py* scripts but might have to be tuned based on your system, you will need to run just *pd_window_1.py* and change the file paths where ever necessary). The *temp* folder contains templates and examples of files that need to be created for running D<sup>2</sup>.
+The *pd_python* folder contains all the scripts that you need to run D<sup>2</sup>. Clone the repo before you start the run. The *slurm* folder contains some examples of scripts to automate D<sup>2</sup> on clusters using slurm queueing system (you might have to change few things, a GUI is also available through the *pd_window* scripts but might have to be tuned based on your system, you will need to run just *pd_window_1.py* and change the file paths where ever necessary). The *temp* folder contains templates and examples of files that need to be created for running D<sup>2</sup>.
 
 Prerequisites
 -------------
