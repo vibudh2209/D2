@@ -1,11 +1,11 @@
 # Deep Docking – Accelerate Virtual Screening by 50X 
 
-Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program. For further information please refer to our [paper](https://www.google.com/). The dataset used for building the models reported in the paper can be found at this [link](https://drive.google.com/file/d/1w86NqUk7brjDIGCxD65tFLNeQ5IgLeHZ/view?usp=sharing)
+Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program. For further information please refer to our [paper](https://www.google.com/). The dataset used for building the models reported in the paper can be found at this [link](https://drive.google.com/file/d/1w86NqUk7brjDIGCxD65tFLNeQ5IgLeHZ/view?usp=sharing).
 
 About this repository
 -------------
 
-The *pd_python* folder contains all the scripts that you need to run D<sup>2</sup>. Clone the repo before you start the run. The *slurm* folder contains some examples of scripts to automate D<sup>2</sup> on clusters using slurm queueing system (you might have to change few things, a GUI is also available, pd_window_1.py, pd_window_2.py and pd_window_3.py but might have to be tuned based on your system, you need to run just pd_window_1.py and change the file paths where ever necessary). The *temp* folder contains templates and examples of files that need to be created for running D<sup>2</sup>.
+The *pd_python* folder contains all the scripts that you need to run D<sup>2</sup>. Clone the repo before you start the run. The *slurm* folder contains some examples of scripts to automate D<sup>2</sup> on clusters using slurm queueing system (you might have to change few things, a GUI is also available through *the pd_window_*py* scripts but might have to be tuned based on your system, you will need to run just *pd_window_1.py* and change the file paths where ever necessary). The *temp* folder contains templates and examples of files that need to be created for running D<sup>2</sup>.
 
 Prerequisites
 -------------
@@ -73,7 +73,7 @@ Run D<sup>2</sup>
 ---------
 
 **Create the project**
-Before starting D<sup>2</sup>, create a project folder and create a text file named "logs.txt"within it, following this [format](temp/logs.txt). 
+Before starting D<sup>2</sup>, create a project folder and create a text file named "logs.txt" within it, following this [format](temp/logs.txt). 
 
 D<sup>2</sup> pipeline is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted virtual hits is reached:
 
@@ -117,7 +117,7 @@ Convert SMILES from phase 1 to 3D sdf format for docking (if it is not done inte
 3. Execute all the bash scripts in *path_project_folder/project_folder/iteration_no/simple_job_predictions*
 4. To check the number of molecules that are left after each iteration, sum the last column of the passed_file_ct.txt created in *path_project_folder/project_folder/iteration_no/morgan_1024_predictions*. You can compare this number with the number of left molecules predicted from the test set (total_pred_left) in *path_project_folder/project_folder/iteration_no/best_model_stats.txt*, and verify whether they are close.
 
-Repeat the above phases 1-5 for as many iterations as needed to reach a desired number of left molecules. You will just need to change the *iteration_no* value every time you start from phase 1 again (sometimes the number of molecules will plateu after a point i.e. the decrease will become very small after each iteration, at that point you can use the useful tip mentioned below)..
+Repeat the above phases 1-5 for as many iterations as needed to reach a desired number of left molecules. You will just need to change the *iteration_no* value every time you start from phase 1 again (sometimes the number of molecules will plateu after a point i.e. the decrease will become very small after each iteration, at that point you can use the useful tip mentioned below).
 
 
 After D<sup>2</sup>
