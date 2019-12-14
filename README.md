@@ -24,7 +24,7 @@ Virtual environments can be activated using conda:
 Preparing molecules for D<sup>2</sup>
 ----------------------------------------
 
-To run the code you need to download the SMILES of the moelcules and calculate their Morgan fingerprint with size of 1024 bits and radius of 2 as QSAR descriptors. 
+To run the code you need to download the SMILES of the molecules and calculate their Morgan fingerprint with size of 1024 bits and radius of 2 as QSAR descriptors. 
 
 **DOWNLOAD AND PREPARE SMILES**
 
