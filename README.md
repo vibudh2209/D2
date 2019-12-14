@@ -11,7 +11,7 @@ Prerequisites
 -------------
 
 To run D<sup>2</sup> you need to install the following packages:
-- Package installer for python [pip](https://pypi.org/project/pip/)
+- Package installer for python ([pip](https://pypi.org/project/pip/))
 - [Anaconda](https://www.anaconda.com/distribution/)
 - A program to create 3D conformations from SMILES
 - Docking program
