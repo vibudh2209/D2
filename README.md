@@ -66,7 +66,7 @@ D<sup>2</sup> pipeline is divided in 5 sequential phases to be repeated over mul
     
 3. This will generate three *smi* files in a *smile* folder. Note that the name of these files will always start with train, valid and test, even if they will all correspond to training set augmentation after iteration 1.
 
-**Phase 2.** *Prepare molecules for docking*
+**Phase 2.** *Prepare molecules for docking*/
 Convert SMILES from phase 1 to 3D sdf format for docking (if it is not done internally by the docking software). This step includes assigning tautomer and protonation states and generating conformers, and can be done with different free (e.g. [openbabel](https://openbabel.org/docs/dev/Command-line_tools/babel.html)) or licensed programs (e.g. [omega](https://www.eyesopen.com/omega)).
 
 **Phase 3.** *Molecular docking*
