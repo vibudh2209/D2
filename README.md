@@ -5,7 +5,7 @@ Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelera
 About this repository
 -------------
 
-The *pd_python* folder contains all the scripts that you need to run D<sup>2</sup>. Copy the folder to your local machine prior to start. The *temp* folder contains useful examples of files that need to be created for running D<sup>2</sup> and can be used as templates.
+The *pd_python* folder contains all the scripts that you need to run D<sup>2</sup>. Copy the folder to your machine prior to start. The *temp* folder contains useful examples of files that need to be created for running D<sup>2</sup> and can be used as templates.
 
 Prerequisites
 -------------
