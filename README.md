@@ -6,7 +6,7 @@ Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelera
 Prerequisites
 -------------
 
-Before running D<sup>2</sup>, copy the *pd_folder* to your machine. Then you need to install the following packages:
+Before running D<sup>2</sup>, copy the *pd_python* folder to your machine. Then you need to install the following packages:
 - Package installer for python [pip](https://pypi.org/project/pip/)
 - [Anaconda](https://www.anaconda.com/distribution/)
 - A program to create 3D conformations from SMILES
