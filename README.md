@@ -2,6 +2,10 @@
 
 Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program. For further information please refer to our [paper](https://www.google.com/).
 
+About this repository
+-------------
+
+The *pd_python* folder contains all the scripts that you need to run D<sup>2</sup>. Copy the folder to your local machine prior to start. The *temp* folder contains useful examples of files that need to be created for running D<sup>2</sup> and can be used as templates.
 
 Prerequisites
 -------------
@@ -20,7 +24,6 @@ Virtual environments can be activated using conda:
 
           conda activate environment_name
 
-All the scripts required for D<sup>2</sup> are in the *pd_python* folder. Copy the folder to your machine and you are ready to start!
  
 Preparing molecules for D<sup>2</sup>
 ----------------------------------------
