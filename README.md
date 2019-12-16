@@ -1,113 +1,141 @@
-# Progressive Docking 2.0 – Deep learning for accelerating virtual screening 
+# Deep Docking – Accelerate Virtual Screening by 50X 
 
-Progressive docking 2.0 (PD2.0) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3B molecules) using your favourite docking program in 1-2 weeks depending on the resources available to you. By using PD2.0 we were able to screen 570 million molecules from ZINC15 using 60 CPU cores and 4 GPUs in about 2 weeks. For further information please refer to our [paper](https://www.google.com/).
+Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program. For further information please refer to our [paper](https://www.google.com/). The dataset used for building the models reported in the paper can be found at this [link](https://drive.google.com/file/d/1w86NqUk7brjDIGCxD65tFLNeQ5IgLeHZ/view?usp=sharing).
+
+About this repository
+-------------
+
+The *pd_python* folder contains all the scripts that you need to run D<sup>2</sup>. Clone the repo before you start the run. The *slurm* folder contains some examples of scripts to automate D<sup>2</sup> on clusters using slurm queueing system (you might have to change few things, a GUI is also available through the *pd_window* scripts but might have to be tuned based on your system, you will need to run just *pd_window_1.py* and change the file paths where ever necessary). The *temp* folder contains templates and examples of files that need to be created for running D<sup>2</sup>.
 
 Prerequisites
 -------------
 
-The following are the minimal prerequisites needed for running PD2.0:
-- Package installer for python [pip](https://pypi.org/project/pip/)
+To run D<sup>2</sup> you need to install the following packages:
+- Package installer for python ([pip](https://pypi.org/project/pip/))
 - [Anaconda](https://www.anaconda.com/distribution/)
-- Virtual environment with python3. Within the environment install [rdkit](https://rdkit.readthedocs.io/en/latest/Install.html#how-to-get-conda) and wget (pip install wget)
-- Virtual environment (different from previous one) with python3. Within the environment install tensorflow-gpu (pip install tensorflow_gpu), pandas (pip install pandas), numpy (pip install numpy), keras (pip install keras), matplotlib (pip install matplotlib) and sklearn (pip install scikit-learn)
 - A program to create 3D conformations from SMILES
-- Docking program 
+- Docking program
 
-Download and prepare compounds for PD2.0
+Then you need to set up the following virtual environments:
+- Python3 virtual environment. Install [rdkit](https://rdkit.readthedocs.io/en/latest/Install.html#how-to-get-conda)
+
+- Activate the rdkit conda environment if not already activated
+
+          conda activate environment_name
+
+- Install Wget package (to download the smiles for later)
+
+          pip install wget
+
+- Python3 virtual environment (different from previous one).
+
+          virtualenv -p python3 tensorflow_gpu 
+
+- Activate the virtual environment
+
+          source /path/to/tensorflow_gpu/bin/activate
+
+- Install tensorflow-gpu, pandas, numpy, keras, matplotlib and sklearn
+
+          pip install -r requirements.txt
+
+ 
+Preparing molecules for D<sup>2</sup>
 ----------------------------------------
 
-To run PD2.0 you need to download the SMILES of the compounds and calculate the Morgan fingerprints for all of them. 
+To run the code you need to download the SMILES of the molecules and calculate their Morgan fingerprint with size of 1024 bits and radius of 2 as QSAR descriptors. 
 
-**SMILES**
+**DOWNLOAD AND PREPARE SMILES**
 
-- Download the SMILES for all the molecules from database. For large databases, SMILES are usually downloaded in url format. For example, to get all the SMILES of ZINC15 database go [here](https://zinc15.docking.org/tranches/home/) and download the 2D SMILES (.smi) in url format
-- Activate the rdkit environment (conda activate environment_name)
+- You can skip the next three points if you have already the database in SMILES format, or if you want to use a different database than ZINC15
+- Go [here](https://zinc15.docking.org/tranches/home/) and download the 2D SMILES (.smi) in url format
+- Activate the virtual environment where rdkit was installed
+- Run
+
+          python download_zinc15.py -up path_url_file/url_file -fp path_smile_folder -fn smile_folder -tp num_cpus
+          
+  This will create a *path_to_smile_folder/smile_folder* folder and download the SMILES within it. This step can take few hours, and ~84GB memory for 1.36 billion molecules.
+- Reorganize the SMILES files into a number of evenly populated files equal to the number of CPUs used for phase 1 (see below). Activate the tensorflow environment and run
+
+          python smile_simplification.py -sfp path_smile_folder/smile_folder -tp num_cpus -tn final_number_of_files
+
+**CALCULATION OF MORGAN FINGERPRINTS**
+
+- Activate the rdkit environment
 - Run the following command
 
-          python pd_python/download_zinc15.py -up url_file_path -fp destination_path -fn name_of_smile_folder -tp num_cpus
+          python Morgan_fing.py -sfp path_smile_folder/smile_folder -fp path_morgan_folder -fn morgan_folder -tp num_cpus
 
-This step can take few hours, and ~84GB memory for 1.3 billion molecules. Please not that this step will download SMILES from ZINC15. You can skip this step if you have already the database in SMILES format, or if you want to use a different database than ZINC15.
+  This will create a *path_to_morgan_folder/morgan_folder* folder, and generate the Morgan fingerprints of 1024 bits of size and radius of 2 within it. It is recommended as many CPUs as possible to speed up the process. This step takes ~260GB memory for 1.36 billion molecules
 
-**MORGAN FINGERPRINTS**
 
-- To calculate the Morgan descriptors for all the SMILES activate the rdkit environment (conda activate environment_name)
-- Run the following command
-
-          python pd_python/Morgan_fing.py -sfp path_to_smile_folder -fp path_where_you_want_morgan_folder -fn name_of_morgan_folder -tp num_cpus
-
-- Use as many CPUs as possible to speed the process. It can take more than 1 day to finish (depending on the number of molecules)
-This step will take ~260GB memory for 1.3 billion molecules.
-
-Run PD2.0
+Run D<sup>2</sup>
 ---------
 
-Before starting PD2.0, create a folder with the name of the target. Create a text file named "logs.txt" inside it, following this [format](temp/logs.txt). PD2.0 is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted good molecules is reached (for more details please check the example folder):
+**Create the project**
+Before starting D<sup>2</sup>, create a project folder and create a text file named "logs.txt" within it, following this [format](temp/logs.txt). 
 
-**Phase 1.** *Random sampling of a fixed number of molecules (e.g. 3 millions) from the entire dataset, getting the Morgan fingerprint and the SMILES*
-1. The number of molecules to be sampled is defined in the logs.txt file. As these molecules will be docked later, set the number of molecules based on the computational power available to you. For iteration 1 try to keep the number as high as possible (you can decrease it for later iterations)
-2. Run phase 1:
+D<sup>2</sup> pipeline is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted virtual hits is reached:
+
+**Phase 1.** *Random sampling of molecules*
+1. The number of molecules to be sampled is defined in the logs.txt file and can be modified any time during the runs (for example, to keep constant the number of molecules added to the training set between iteration 1 and the other iterations). Choose the number according with the computational resources that are available (for the paper we sampled 3 million molecules for iteration 1 (so that can be divided into 1 million each for training, validation and test) and 1 million from iteration 2 onwards, all for training), as these molecules will be docked later on. During iteration 1 this sample of molecules will be splitted in three to build initial training, validation and test set. From iteration 2 it will correspond to the number of molecules that are used for augmenting the training set (so dont worry about the naming convention from iteration 2 onwards).
+2. Run phase 1
     
-          bash pd_python/phase_1.sh iteration_no n_cpus path_to_log_file path_to_tensorflow_venv
+          bash pd_python/phase_1.sh iteration_no n_cpus path_to_log_file path_tensorflow_venv
+    
+3. This will generate three *smi* files in a *smile* folder. Note that the name of these files will always start with train, valid and test, even if they will all correspond to training set augmentation after iteration 1.
 
-**Phase 2.** *2D to 3D conversion from SMILES to sdf*\
-The three files created in the SMILES folder in phase 1 (train, valid and test) need to be converted to 3D sdf format for docking. This includes assigning protonation states and generate 3D conformations, and can be done with different free (e.g. [openbabel](https://openbabel.org/docs/dev/Command-line_tools/babel.html)) or licensed programs (e.g. [omega](https://www.eyesopen.com/omega)). For example, with OpenEye omega program protonate the molecules using 
-        
-          fixpka -in in_file.smi -out output_file.smi
-
-and convert the obtained smi file to sdf by running
-                                        
-          oeomega classic -in file_after_protonation.smi -out name_of_sdf_file.sdf -maxconfs 1 -strictstereo false -mpi_np number_of_cpus -log log_file_name.log -prefix prefix_name
-                                       
-This phase will take >4-5 hours using 20 CPUs for 1 million molecules. Note that you may want to create more than 1 conformation per molecule depending on the docking software.
+**Phase 2.** *Prepare molecules for docking*\
+Convert SMILES from phase 1 to 3D sdf format for docking (if it is not done internally by the docking software). This step includes assigning tautomer and protonation states and generating conformers, and can be done with different free (e.g. [openbabel](https://openbabel.org/docs/dev/Command-line_tools/babel.html)) or licensed programs (e.g. [omega](https://www.eyesopen.com/omega)).
 
 **Phase 3.** *Molecular docking*
-1. Run docking for the three compound sets (training, validation and testing)
-2. From the docking results create three **csv** files with two columns, *ZINC_ID*, *r_i_docking_score* (use these exact headings):
-    - ZINC_ID column will have IDs of the molecules (use the same heading even if you are not screening ZINC)
-    - r_i_docking_score will have the docking score values 
-3. Name the csv files as training_labels.txt, validation_labels.txt, testing_labels.txt
-4. Put the three files in the respective iteration folder
+1. Run docking using the created sdf files
+2. From the docking results create three *csv* files with two columns, *ZINC_ID*, *r_i_docking_score* (use these exact headings):
+    - Populate the *ZINC_ID* column with the IDs of molecules (use the same heading even if you are not screening ZINC)
+    - Add the corresponding scores in the *r_i_docking_score* column
+3. Name the *csv* files as training_labels.txt, validation_labels.txt, testing_labels.txt, according with to the original *smi* file used to create files for docking. Follow this [format](temp/labels_example.txt)
+4. Put these files in the *iteration_no* folder
 
-**Phase 4.** *Training of neural networks models*
-1. To generate bash files with different hyperparameters activate the tensorflow environment and run
+**Phase 4.** *Neural network training*
+1. Training neural network models with different set of hyperparameters. Activate the tensorflow environment and run
      
-          python simple_job_models_noslurm.py -n_it iteration_no -mdd morgan_directory_path -time training_time -protein protein_name -file_path path_to_protein_folder -pdfp pd_python_folder_path -tfp tensorflow_venv_path -min_last minimum_molecules_at_last_iteration
+          python simple_job_models_noslurm.py -n_it iteration_no -mdd path_morgan_folder/morgan_folder -time training_time -protein project_folder_name -file_path path_to_project_folder -pdfp path_to_pd_python/pd_python -tfp path_tensorflow_venv -min_last minimum_molecules_at_last_iteration
 
-2. For training time, specify a value between 1 and 2 (1 to 2 hours)
-3. For minimum_molecules_at_last_iteration put something like 100-200 (for details please read the paper, default 200)
-4. Execute the 12 bash scripts created in protein_folder_path/protein/iteration_no/simple_job
+2. Training time should be set between 1 and 2 (hours)
+3. The minimum_molecules_at_last_iteration defines the number of top scoring molecules considered as virtual hits in the validation set during the last iteration. For example, setting this value to 100 for a validation set of 1 million molecules corresponds to consider the top 0.01% molecules as virtual hits, and so on. Default value is 200.
+4. Execute all the bash scripts in *path_project_folder/project_folder/iteration_no/simple_job*
     
-**Phase 5.** *Choice of best hyperparameter and prediction of the entire database*
-1. For selecting the best hyperparameter run 
+**Phase 5.** *Selection of best model and prediction of the entire database*
+1. For chosing the best model run 
                  
-          python hyperparameter_result_evaluation.py -n_it iteration_no -protein protein_name -file_path path_to_protein -mdd morgan_directory_path
+          python hyperparameter_result_evaluation.py -n_it iteration_no -protein project_folder_name -file_path path_project_folder -mdd path_morgan_folder/morgan_folder
                 
-2. Generate bash files for individual Morgan files (for prediction):
+2. Generate bash files for prediction:
 
-          python simple_job_predictions_noslurm.py -protein protein_name -file_path path_to_protein -n_it iteration_no -mdd morgan_directory
+          python simple_job_predictions_noslurm.py -protein project_folder_name -file_path path_project_folder -n_it iteration_no -mdd path_morgan_folder/morgan_folder
                 
-3. Execute all the bash scripts in protein_folder_path/protein/iteration_no/simple_job_predictions
-4. To check the number of molecules left after each iteration just load the protein_folder_path/protein/iteration_no/morgan_1024_predictions/passed_file_ct.txt and sum the last column. You can compare this number with predicted molecule left: 'protein_folder_path/protein/iteration_no/best_model_stats.txt' and verify whether they are close.
+3. Execute all the bash scripts in *path_project_folder/project_folder/iteration_no/simple_job_predictions*
+4. To check the number of molecules that are left after each iteration, sum the last column of the passed_file_ct.txt created in *path_project_folder/project_folder/iteration_no/morgan_1024_predictions*. You can compare this number with the number of left molecules predicted from the test set (total_pred_left) in *path_project_folder/project_folder/iteration_no/best_model_stats.txt*, and verify whether they are close.
 
-Final iteration
+Repeat the above phases 1-5 for as many iterations as needed to reach a desired number of left molecules. You will just need to change the *iteration_no* value every time you start from phase 1 again (sometimes the number of molecules will plateu after a point i.e. the decrease will become very small after each iteration, at that point you can use the useful tip mentioned below).
+
+
+After D<sup>2</sup>
 ---------------
 
-Repeat the above phases 1-5 for as many iterations as it takes to get a fixed number of final molecules that can be docked (e.g. until final number is <=15 million). You will just need to change the iteration_no value. After the final iteration is done you will dock the molecules predicted by PD2.0. Some of these molecules could have been randomly sampled during the previous iterations and do not need to be docked again:
+ After the final iteration is completed, the final set can be directly docked to remove residual low scoring molecules. Some molecules could have been randomly sampled and docked during the previous iterations, and therefore do not need to be docked again:
 - Run 
 
-          bash final_phase_noslurm.sh iteration_no number_of_cpus path_to_log_file path_to_tensorflow_venv
+          bash final_phase_noslurm.sh iteration_no number_of_cpus path_logs_file path_tensorflow_venv
 
-- This will create a new folder called after_iteration and put all the already docked molecules inside the docked folder and all the remaining SMILES in to_dock folder
-- You can dock the SMILES using the same procedure as step 3
+  This will create a new folder in the project called *after_iteration* and put all the molecules that have been already docked inside the *docked* folder within it, and all the remaining SMILES in the *to_dock* folder
+- You can dock the SMILES using the same procedure as step 2 and 3
+
 
 Useful tips
 -----------
-
-- In case you are in hurry and want to select top n molecules after an iteration (for example you completed 3 iterations and 30 million molecules are left but you do not want to run another iteration, thus you want to select the predicted top 10 million compounds) run
-
+You can select a subset of top predicted virtual hits instead of all of them to dock after the final iteration, using the rank provided by the model probabilities of being virtual hits (for example you completed 3 iterations after which 30 million molecules are remaining, and you want to dock only the top 10 million compounds). Run
 
           python Prediction_morgan_1024_top_n.py -protein protein_name -it iteration_no -file_path path_to_protein -top_n top_n_molecules
-        
-- If you want to reorganize a large number of SMILES files into fewer, evenly populated files, you can activate the tensorflow environment and run
 
-          python pd_python/smile_simplification.py -sfp smile_folder -tp num_cpus -tn final_number_of_files
+Executing this command will rename the original *morgan_1024_predictions* folder to *morgan_1024_predictions_old*, and create a new *morgan_1024_predictions* folder inside *iteration_no*, with all the files generated by phase 5 for the top n compounds only. 
