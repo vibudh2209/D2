@@ -1,16 +1,16 @@
 # Deep Docking – Accelerate Virtual Screening by 50X 
 
-Deep docking (D<sup>2</sup>) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program. For further information please refer to our [paper](https://www.google.com/). The dataset used for building the models reported in the paper can be found at this [link](https://drive.google.com/file/d/1w86NqUk7brjDIGCxD65tFLNeQ5IgLeHZ/view?usp=sharing).
+Deep docking (DD) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program. For further information please refer to our [paper](https://www.google.com/). The dataset used for building the models reported in the paper can be found at this [link](https://drive.google.com/file/d/1w86NqUk7brjDIGCxD65tFLNeQ5IgLeHZ/view?usp=sharing).
 
 About this repository
 -------------
 
-The *pd_python* folder contains all the scripts that you need to run D<sup>2</sup>. Copy the folder to your machine prior to start. The *slurm* folder contains some examples of scripts to automate D<sup>2</sup> on clusters using slurm queueing system. The *temp* folder contains templates and examples of files that need to be created for running D<sup>2</sup>.
+The *pd_python* folder contains all the scripts that you need to run DD. Copy the folder to your machine prior to start. The *slurm* folder contains some examples of scripts to automate DD on clusters using slurm queueing system. The *temp* folder contains templates and examples of files that need to be created for running DD.
 
 Prerequisites
 -------------
 
-To run D<sup>2</sup> you need to install the following packages:
+To run DD you need to install the following packages:
 - Package installer for python ([pip](https://pypi.org/project/pip/))
 - [Anaconda](https://www.anaconda.com/distribution/)
 - A program to create 3D conformations from SMILES
@@ -25,7 +25,7 @@ Virtual environments can be activated using conda:
           conda activate environment_name
 
  
-Preparing molecules for D<sup>2</sup>
+Preparing molecules for DD
 ----------------------------------------
 
 To run the code you need to download the SMILES of the molecules and calculate their Morgan fingerprint with size of 1024 bits and radius of 2 as QSAR descriptors. 
@@ -54,13 +54,13 @@ To run the code you need to download the SMILES of the molecules and calculate t
   This will create a *path_to_morgan_folder/morgan_folder* folder, and generate the Morgan fingerprints of 1024 bits of size and radius of 2 within it. It is recommended as many CPUs as possible to speed up the process. This step takes ~260GB memory for 1.36 billion molecules
 
 
-Run D<sup>2</sup>
+Run DD
 ---------
 
 **Create the project**
-Before starting D<sup>2</sup>, create a project folder and create a text file named "logs.txt"within it, following this [format](temp/logs.txt). 
+Before starting DD, create a project folder and create a text file named "logs.txt"within it, following this [format](temp/logs.txt). 
 
-D<sup>2</sup> pipeline is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted virtual hits is reached:
+DD pipeline is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted virtual hits is reached:
 
 **Phase 1.** *Random sampling of molecules*
 1. The number of molecules to be sampled is defined in the logs.txt file and can be modified any time during the runs (for example, to keep constant the number of molecules added to the training set between iteration 1 and the other iterations). Choose the number according with the computational resources that are available, as these molecules will be docked later on. During iteration 1 this sample of molecules will be splitted in three to build initial training, validation and test set. From iteration 2 it will correspond to the number of molecules that are used for augmenting the training set.
@@ -105,7 +105,7 @@ Convert SMILES from phase 1 to 3D sdf format for docking (if it is not done inte
 Repeat the above phases 1-5 for as many iterations as needed to reach a desired number of left molecules. You will just need to change the *iteration_no* value every time you start from phase 1 again.
 
 
-After D<sup>2</sup>
+After DD
 ---------------
 
  After the final iteration is completed, the final set can be directly docked to remove residual low scoring molecules. Some molecules could have been randomly sampled and docked during the previous iterations, and therefore do not need to be docked again:
