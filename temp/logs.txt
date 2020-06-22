@@ -3,5 +3,5 @@ project_folder
 path_grid_file/grid_file                   #leave this line empty or write some gibberish if you do not use a grid for docking
 path_morgan_folder/morgan_folder
 path_smile_folder/smile_folder
-path_3dsdf_folder/3dsdf_folder             #leave line empty if no 3d sdf structures are available for all the smiles
+path_3dsdf_folder/3dsdf_folder             #leave this line empty if no 3d sdf structures are available for all the smiles
 number_of_molecules_to_sample
