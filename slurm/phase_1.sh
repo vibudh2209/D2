@@ -2,7 +2,8 @@
 
 file_path=`sed -n '1p' $3`
 protein=`sed -n '2p' $3`
-n_mol=`sed -n '8p' $3`
+sdf_directory=`sed -n '6p' $3`
+n_mol=`sed -n '7p' $3`
 
 pr_it=$(($1-1)) 
 
