@@ -101,7 +101,7 @@ Convert SMILES from phase 1 to 3D sdf format for docking (if it is not done inte
 4. Put these files in the *iteration_no* folder
 
 **Phase 4.** *Neural network training*
-1. Training neural network models with different sets of hyperparameters. Activate the tensorflow environment and run
+1. Training neural network models with different sets of hyperparameters (12 combinations of hyperparameter values will be evaluated). Activate the tensorflow environment and run
      
           python simple_job_models_noslurm.py -n_it iteration_no -mdd path_morgan_folder/morgan_folder -time training_time -protein project_folder_name -file_path path_to_project_folder -pdfp path_to_pd_python/pd_python -tfp path_tensorflow_venv -min_last minimum_molecules_at_last_iteration
 
