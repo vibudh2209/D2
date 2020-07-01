@@ -1,7 +1,7 @@
 # Deep Docking – Accelerate Virtual Screening by 50X 
 
 
-Deep docking (DD) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen extra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program. For further information please refer to our [paper](https://pubs.acs.org/doi/10.1021/acscentsci.0c00229). The dataset used for building the models reported in the paper can be found at this [link](https://drive.google.com/file/d/1w86NqUk7brjDIGCxD65tFLNeQ5IgLeHZ/view?usp=sharing).
+Deep docking (DD) is a deep learning-based tool developed to accelerate docking-based virtual screening. In this repository you can find all what you need to screen ultra-large chemical libraries such as ZINC15 database (containing >1.3 billion molecules) using your favourite docking program. For further information please refer to our [paper](https://pubs.acs.org/doi/10.1021/acscentsci.0c00229). The dataset used for building the models reported in the paper can be found at this [link](https://drive.google.com/file/d/1w86NqUk7brjDIGCxD65tFLNeQ5IgLeHZ/view?usp=sharing).
 
 
 About this repository
