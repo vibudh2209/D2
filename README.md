@@ -77,7 +77,17 @@ Run DD
 
 **Create the project**
 
-Before starting DD, create a project folder and create a text file named "logs.txt"within it, following this [format](temp/logs.txt). 
+Before starting DD, create a project folder and create a text file named "logs.txt" within it, following this [format](temp/logs.txt). Here it is an explanation of how logs lines should be prepared:
+
+| Line number | Value | Explanation |
+|:---|:---|:---|
+| 1 | path_project_folder | Path to the project folder |              
+| 2 | project_folder | Name of project folder |                             
+| 3 | path_grid_file/grid_file | Path and name of docking grid file; write a random line if you do not use a grid |                  
+| 4 | path_morgan_folder/morgan_folder | Path to files containing the previously calculated QSAR descriptors (Morgan fingerprints) |           
+| 5 | path_smile_folder/smile_folder | Path to files containing SMILES of molecules |             
+| 6 | path_3dsdf_folder/3dsdf_folder | Path to precalculated 3D sdf conformations of molecules; write a random line if you do not have them |            
+| 7 | number_of_molecules_to_sample | Number of molecules sampled at each iteration. In the first iteration, this number of molecules will be split in three to form initial training, validation and testing, from the second iteration it will be the number of molecules added to the training set |
 
 DD pipeline is divided in 5 sequential phases to be repeated over multiple iterations until a desired number of final predicted virtual hits is reached:
 
