@@ -77,7 +77,7 @@ Run DD
 
 **Create the project**
 
-Before starting DD, create a project folder and create a text file named "logs.txt" within it, following this [format](temp/logs.txt). Here it is an explanation of how logs lines should be prepared:
+Before starting DD, create a project folder and create a text file named "logs.txt" within it, following this [format](temp/logs.txt). An overview of logs lines:
 
 | Line number | Value | Explanation |
 |:---|:---|:---|
