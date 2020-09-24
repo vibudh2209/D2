@@ -93,11 +93,22 @@ def get_mol(fname):
             
     return to_return_train,to_return_valid,to_return_test
 
-def extract_smile(file_name,train,valid,test):
-    #for file_name in file_names:
+def extract_smile(file_name):
     ref1 = open(file_path+'/'+protein+'/iteration_'+str(n_it)+'/smile/'+'train_'+file_name.split('/')[-1],'w')
     ref2 = open(file_path+'/'+protein+'/iteration_'+str(n_it)+'/smile/'+'valid_'+file_name.split('/')[-1],'w')
     ref3 = open(file_path+'/'+protein+'/iteration_'+str(n_it)+'/smile/'+'test_'+file_name.split('/')[-1],'w')
+    train = {}
+    valid = {}
+    test = {}
+    with open(file_path+'/'+protein+"/iteration_"+str(n_it)+"/train_set.txt",'r') as ref:
+         for line in ref:
+            train[line.rstrip()] = 0
+    with open(file_path+'/'+protein+"/iteration_"+str(n_it)+"/valid_set.txt",'r') as ref:
+         for line in ref:
+            valid[line.rstrip()] = 0
+    with open(file_path+'/'+protein+"/iteration_"+str(n_it)+"/test_set.txt",'r') as ref:
+         for line in ref:
+            test[line.rstrip()] = 0
     with open(file_name,'r') as ref:
         ref.readline()
         flag=0
@@ -125,10 +136,6 @@ def extract_smile(file_name,train,valid,test):
             flag = 0
 
 def extract_smile_final(all_mols,file_name):
-    #for file_name in file_names:
-    #all_total_mols = {}
-    #with open(file_path+'/'+protein+"/after_iteration/to_dock/to_dock_"+str(file_no)+".pickle",'rb') as ref:
-    #    all_mols  = pickle.load(ref)
     fn = file_name.split('/')[-1]
     ref1 = open(file_path+'/'+protein+'/after_iteration/to_dock/smile/'+fn,'w')    
     with open(file_name,'r') as ref:
@@ -273,78 +280,9 @@ if __name__=='__main__':
     else:
         print('not final')
         t=time.time()
-        if len(files)==0:
-            return_mols_per_file = []
-        else:
-            with closing(Pool(np.min([tot_process,len(files)]))) as pool:
-                return_mols_per_file = pool.map(get_mol,files)
-            print(time.time()-t)
-       
-        for j in range(3):
-            ct = 0
-            for i in range(len(return_mols_per_file)):
-                ct+=len(return_mols_per_file[i][j])
-            print(ct)
-        
-        for k in range(3):
-            t=time.time()
-            for i in range(len(return_mols_per_file)):
-                for j in range(i+1,len(return_mols_per_file)):
-                    for keys in return_mols_per_file[i][k].keys():
-                        if keys in return_mols_per_file[j][k]:
-                            return_mols_per_file[j][k].pop(keys)
-            print(time.time()-t)
-        
-        for j in range(3):
-            ct = 0
-            for i in range(len(return_mols_per_file)):
-                ct+=len(return_mols_per_file[i][j])
-            print(ct)
-        
-        train = {}
-        valid = {}
-        test = {}
-        for j in range(3):
-            for i in range(len(return_mols_per_file)):
-                for keys in return_mols_per_file[i][j]:
-                    if j==0:
-                        train[keys] = 0
-                    elif j==1:
-                        valid[keys] = 0
-                    elif j==2:
-                        test[keys] = 0
-        
-        all_train = {}
-        all_valid = {}
-        all_test = {}
-        with open(file_path+'/'+protein+"/iteration_"+str(n_it)+"/train_set.txt",'r') as ref:
-            for line in ref:
-                all_train[line.rstrip()] = 0
-
-        with open(file_path+'/'+protein+"/iteration_"+str(n_it)+"/valid_set.txt",'r') as ref:
-            for line in ref:
-                all_valid[line.rstrip()] = 0
-        
-        with open(file_path+'/'+protein+"/iteration_"+str(n_it)+"/test_set.txt",'r') as ref:
-            for line in ref:
-                all_test[line.rstrip()] = 0
-        
-        for keys in train.keys():
-            all_train.pop(keys)
-
-        for keys in valid.keys():
-            all_valid.pop(keys)
-
-        for keys in test.keys():
-            all_test.pop(keys)
-        
-        print(len(all_train),len(all_valid),len(all_test))
-
-        t=time.time()
         with closing(Pool(np.min([tot_process,len(files_smiles)]))) as pool:
-            pool.map(partial(extract_smile,train=all_train,valid=all_valid,test=all_test),files_smiles)
+            pool.map(extract_smile,files_smiles)
         print(time.time()-t)
-        
         
         all_to_delete = []
         for type_to in ['train','valid','test']:
@@ -377,4 +315,3 @@ if __name__=='__main__':
 
         with closing(Pool(np.min([tot_process,len(all_to_delete)]))) as pool:
             pool.map(delete_all,all_to_delete)
-        
