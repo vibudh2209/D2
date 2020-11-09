@@ -34,8 +34,8 @@ dropout = [0.7]
 learn_rate = [0.0001]
 bin_array = [2,3]
 wt = [2,3]
-bs = 256
-oss = 10
+bs = [256]
+oss = [10]
 
 try:
     os.mkdir(file_path+'/'+protein+'/iteration_'+str(n_it)+'/simple_job')
