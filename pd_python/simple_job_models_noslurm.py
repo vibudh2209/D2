@@ -112,6 +112,6 @@ for i in range(len(all_hyperparas)):
         ref.write('source '+tf_venv_path+'/bin/activate\n')
         #for j in range(len(hyper_division[i])):
         o,batch,nu,do,lr,ba,w,c = all_hyperparas[i]
-        ref.write('python '+'progressive_docking.py'+' '+'-num_units'+' '+str(nu)+' '+'-dropout'+' '+str(do)+' '+'-learn_rate'+' '+str(lr)+' '+'-bin_array'+' '+str(ba)+' '+'-wt'+' '+str(w)+' '+'-cf'+' '+str(c)+' '+'-n_it'+' '+str(n_it)+' '+'-t_mol'+' '+str(t_mol)+' '+'-os'+' '+str(o)+' '+'-bs'+' '+str(batch)+' '+'-protein'+' '+protein+' '+'-file_path'+' '+file_path+'-run_time'+' '+time+'\n')
+        ref.write('python '+'progressive_docking.py'+' '+'-num_units'+' '+str(nu)+' '+'-dropout'+' '+str(do)+' '+'-learn_rate'+' '+str(lr)+' '+'-bin_array'+' '+str(ba)+' '+'-wt'+' '+str(w)+' '+'-cf'+' '+str(c)+' '+'-n_it'+' '+str(n_it)+' '+'-t_mol'+' '+str(t_mol)+' '+'-os'+' '+str(o)+' '+'-bs'+' '+str(batch)+' '+'-protein'+' '+protein+' '+'-file_path'+' '+file_path+' '+'-run_time'+' '+time+'\n')
     ct+=1
 
