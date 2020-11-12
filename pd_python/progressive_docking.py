@@ -115,7 +115,7 @@ except:
 is_v2 = False
 #X_old_full = []
 #y_old_full = []
-for i in range(1,n_iteration):
+for i in range(1,n_iteration+1):
     try:
         train_pd = pd.read_csv(file_path+'/'+protein+'/iteration_'+str(i)+'/morgan/train'+prefix[0],header=None,usecols=[0])
     except:
