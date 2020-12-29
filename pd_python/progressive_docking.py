@@ -55,7 +55,7 @@ oss=int(io_args.os)
 t_mol=float(io_args.t_mol)
 protein = io_args.protein
 file_path = io_args.file_path
-run_time = int(io_args.os)
+run_time = int(io_args.run_time)
 print(nu,df,lr,ba,wt,cf,bs,oss,protein,file_path,run_time)
 
 
