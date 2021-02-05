@@ -59,7 +59,7 @@ To run the code you need to download the SMILES of the molecules and calculate t
           
   This will create a *path_to_smile_folder/smile_folder* folder and download the SMILES within it. This step can take few hours, and ~84GB for 1.36 billion molecules.
   
-- Reorganize the SMILES files into a number of evenly populated files equal to the number of CPUs used for phase 1 (see below). Activate the tensorflow environment and run
+- Reorganize the SMILES files into a number (final_number_of_files) of evenly populated files equal to the number of CPUs used for phase 1 (see below). Activate the tensorflow environment and run
 
           python smile_simplification.py -sfp path_smile_folder/smile_folder -tp num_cpus -tn final_number_of_files
 
