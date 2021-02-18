@@ -8,6 +8,8 @@ parser.add_argument('-protein','--protein',required=True)
 parser.add_argument('-file_path','--file_path',required=True)
 parser.add_argument('-n_it','--n_it',required=True)
 parser.add_argument('-mdd','--morgan_directory',required=True)
+parser.add_argument('-pdfp','--pd_folder_path',required=True)
+parser.add_argument('-tfp','--tf_venv_path',required=True)
 
 io_args = parser.parse_args()
 
