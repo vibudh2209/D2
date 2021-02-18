@@ -127,7 +127,7 @@ Convert SMILES from phase 1 to 3D sdf format for docking (if it is not done inte
                 
 2. Generate bash files for prediction:
 
-          python simple_job_predictions_noslurm.py -protein project_folder_name -file_path path_project_folder -n_it iteration_no -mdd path_morgan_folder/morgan_folder
+          python simple_job_predictions_noslurm.py -protein project_folder_name -file_path path_project_folder -n_it iteration_no -mdd path_morgan_folder/morgan_folder -pdfp path_to_pd_python/pd_python -tfp path_tensorflow_venv
                 
 3. Execute all the bash scripts in *path_project_folder/project_folder/iteration_no/simple_job_predictions*
 4. To check the number of molecules that are left after each iteration, sum the last column of the passed_file_ct.txt created in *path_project_folder/project_folder/iteration_no/morgan_1024_predictions*. You can compare this number with the number of left molecules predicted from the test set (total_pred_left) in *path_project_folder/project_folder/iteration_no/best_model_stats.txt*, and verify whether they are close.
