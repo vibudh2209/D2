@@ -16,6 +16,8 @@ io_args = parser.parse_args()
 protein = io_args.protein
 file_path = io_args.file_path
 n_it=int(io_args.n_it)
+pd_folder_path=io_args.pd_folder_path
+tf_venv_path=io_args.tf_venv_path
 mdd=io_args.morgan_directory
 
 
